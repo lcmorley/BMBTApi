@@ -12,7 +12,7 @@ public class BMBTController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "history/{id}", produces = "application/json")
 	public ResponseEntity<String> getTestHistory(@PathVariable("id") final String userId) {
-		final String historyJson = "{\"history\" : {\"id\":\"" + userId + "12345\"}}";		
+		final String historyJson = "{\"history\" : {\"id\":\"" + userId + "1234567890\"}}";		
 		return new ResponseEntity<String>(historyJson, HttpStatus.OK);
 	}
 	
