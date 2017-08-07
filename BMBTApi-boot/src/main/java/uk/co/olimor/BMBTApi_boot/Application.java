@@ -8,7 +8,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"uk.co.olimor.BMBTApi_boot.controller"})
+@ComponentScan(basePackages = {"uk.co.olimor.BMBTApi_boot.controller", 
+		"uk.co.olimor.BMBTApi_boot.dao", "uk.co.olimor.BMBTApi_boot.config"})
 @SpringBootApplication
 public class Application {
 	
