@@ -44,7 +44,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 			result = stmt.executeQuery("SELECT * FROM users");
 			while (result.next())
-				users.add(new User(result.getInt(1), result.getString(2)));
+				users.add(new User(result.getInt(1), result.getString(2), "lcmorley"));
 		} catch (final SQLException e) {
 			e.printStackTrace();
 		} finally {

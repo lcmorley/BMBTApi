@@ -23,4 +23,9 @@ public class User {
 	 */
 	private String firstName;
 	
+	/**
+	 * User name.
+	 */
+	private String username;
+	
 }
