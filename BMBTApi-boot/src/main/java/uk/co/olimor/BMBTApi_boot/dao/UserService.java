@@ -9,7 +9,7 @@ import uk.co.olimor.BMBTApi_boot.model.User;
  * @author leonmorley
  *
  */
-public interface DatabaseService {
+public interface UserService {
 
 	/**
 	 * @return - a {@link List} or {@link User} objects.
