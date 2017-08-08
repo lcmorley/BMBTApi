@@ -14,14 +14,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class Application {
 	
 	public static void main (String[] args) {
-		System.out.println("Hello");
-		try {
 		SpringApplication.run(Application.class, args);
-		} catch (Exception e) {
-			System.out.println("Error");
-			e.printStackTrace();
-		}
-		System.out.println("Goodbye");
 	}
 
 }

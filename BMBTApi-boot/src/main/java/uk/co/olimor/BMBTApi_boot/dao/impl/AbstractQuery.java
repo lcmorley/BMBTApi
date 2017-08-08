@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Data
 @Log4j2
-public abstract class AbstractService<T> {
+public abstract class AbstractQuery<T> {
 
 	/**
 	 * Datasource object.

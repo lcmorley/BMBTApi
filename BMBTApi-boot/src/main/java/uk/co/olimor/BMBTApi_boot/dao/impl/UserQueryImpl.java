@@ -1,18 +1,14 @@
 package uk.co.olimor.BMBTApi_boot.dao.impl;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.UserService;
-import uk.co.olimor.BMBTApi_boot.model.Question;
-import uk.co.olimor.BMBTApi_boot.model.Test;
+import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
@@ -23,14 +19,22 @@ import uk.co.olimor.BMBTApi_boot.model.User;
  */
 @Service
 @Log4j2
-public class UserServiceImpl extends AbstractService<User> implements UserService {
+public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 
 	/**
 	 * Get users.
 	 */
-	public List<User> getUsers() {
+	public User getUser(int userId) {
 		log.traceEntry();
-		return log.traceExit(query("SELECT * FROM users"));
+		
+		final List<User> users = query("SELECT * FROM users where id=" + userId);	
+		
+		if (users.size() == 0) { 
+			log.error("Unable to find user with id: " + userId);
+			return null;
+		}
+		
+		return log.traceExit(users.get(0));
 	}
 
 	@Override
@@ -48,4 +52,5 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
 		return log.traceExit(users);
 	}
+
 }

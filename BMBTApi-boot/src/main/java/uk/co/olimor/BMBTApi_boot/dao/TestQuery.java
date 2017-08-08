@@ -9,7 +9,7 @@ import uk.co.olimor.BMBTApi_boot.model.Test;
  * 
  * @author leonmorley
  */
-public interface TestService {
+public interface TestQuery {
 
 	/**
 	 * @return a {@link List} of {@link Test} objects.

@@ -1,7 +1,5 @@
 package uk.co.olimor.BMBTApi_boot.dao;
 
-import java.util.List;
-
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
@@ -9,11 +7,13 @@ import uk.co.olimor.BMBTApi_boot.model.User;
  * @author leonmorley
  *
  */
-public interface UserService {
+public interface UserQuery {
 
 	/**
-	 * @return - a {@link List} or {@link User} objects.
+	 * @param userid - the userid.
+	 * 
+	 * @return - a {@link User} object.
 	 */
-	List<User> getUsers();
+	User getUser(int userId);
 	
 }

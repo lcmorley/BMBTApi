@@ -8,19 +8,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.TestService;
+import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 import uk.co.olimor.BMBTApi_boot.model.Question;
 import uk.co.olimor.BMBTApi_boot.model.Test;
 
 /**
- * Implementation of {@link TestService}.
+ * Implementation of {@link TestQuery}.
  * 
  * @author leonmorley
  *
  */
 @Log4j2
 @Service
-public class TestServiceImpl extends AbstractService<Test> implements TestService {
+public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 
 	/**
 	 * Query.
