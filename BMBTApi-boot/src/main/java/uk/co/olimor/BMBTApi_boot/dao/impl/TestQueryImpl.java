@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +33,15 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 			"ORDER BY test.id";
 	
 	@Override
+	@Cacheable("tests")
 	public List<Test> getTests() {
 		log.traceEntry();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return log.traceExit(query(QUERY));
 	}
 

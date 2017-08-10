@@ -23,3 +23,13 @@ CREATE TABLE operator (
 	id int,
     operatorValue varchar(1)
 );
+
+CREATE TABLE testResult (
+	userId int,
+    testId int,
+    correctAnswers int,
+    incorrectAnswers int,
+    attemptedAnswers int,
+    timeElapsed float,
+    testDate datetime
+)
