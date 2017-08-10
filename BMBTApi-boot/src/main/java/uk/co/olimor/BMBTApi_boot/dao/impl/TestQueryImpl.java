@@ -36,12 +36,6 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 	@Cacheable("tests")
 	public List<Test> getTests() {
 		log.traceEntry();
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return log.traceExit(query(QUERY));
 	}
 
