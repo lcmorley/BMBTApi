@@ -43,6 +43,11 @@ public class BMBTController {
 	@RequestMapping(method = RequestMethod.GET, value = "user/{id}", produces = "application/json")
 	public ResponseEntity<User> getUser(@PathVariable("id") final Integer id) {
 		log.entry(id);		
+		final User user = userQuery.getUser(id);
+		
+		if (user == null)
+			return log.traceExit(new ResponseEntity<User>(user, HttpStatus.NOT_FOUND));
+		
 		return log.traceExit(new ResponseEntity<User>(userQuery.getUser(id), HttpStatus.OK));
 	}
 	

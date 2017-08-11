@@ -22,10 +22,5 @@ public class User {
 	 * First Name.
 	 */
 	private String firstName;
-	
-	/**
-	 * User name.
-	 */
-	private String username;
-	
+
 }
