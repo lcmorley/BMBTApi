@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,19 +22,27 @@ import uk.co.olimor.BMBTApi_boot.model.User;
  * @author morlel
  *
  */
-
 @Log4j2
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BMBTControllerTest {
 
+	/**
+	 * The local server port to use in the test.
+	 */
 	@LocalServerPort
 	private int port;
 
-	TestRestTemplate restTemplate = new TestRestTemplate();
+	/**
+	 * {@link TestRestTemplate} instance.
+	 */
+	final TestRestTemplate restTemplate = new TestRestTemplate();
 
-	HttpHeaders headers = new HttpHeaders();
-
+	/**
+	 * Test happy path (/user/1).
+	 * 
+	 * @throws JSONException
+	 */
 	@Test
 	public void test_User_Happy() throws JSONException {
 		log.traceEntry();
@@ -48,6 +55,11 @@ public class BMBTControllerTest {
 		log.traceExit();
 	}
 
+	/**
+	 * Test unknown user (/user/100).
+	 * 
+	 * @throws JSONException
+	 */
 	@Test
 	public void test_User_Unknown() throws JSONException {
 		log.traceEntry();
@@ -58,7 +70,7 @@ public class BMBTControllerTest {
 		
 		log.traceExit();
 	}
-	
+		
 	/**
 	 * Create URL with port.
 	 * 
