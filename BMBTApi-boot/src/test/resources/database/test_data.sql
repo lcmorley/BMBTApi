@@ -1,6 +1,6 @@
 #Test users
 INSERT INTO users
-VALUES (1, "Oliver AWS");
+VALUES (1, "Oliver AS");
 
 INSERT INTO users
 VALUES (2, "Eva");

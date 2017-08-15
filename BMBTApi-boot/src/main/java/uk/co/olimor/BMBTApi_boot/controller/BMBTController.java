@@ -71,7 +71,7 @@ public class BMBTController {
 	@RequestMapping(value = "submitResult", method = RequestMethod.POST, consumes= "application/json")
 	public ResponseEntity<String> submitResult(@RequestBody TestResult result) {
 		log.entry(result);
-		return log.traceExit(new ResponseEntity<String>("Test submitted successfully", HttpStatus.OK));
+		return log.traceExit(new ResponseEntity<String>("Test Result submitted successfully", HttpStatus.OK));
 	}
 
 }
