@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
+import uk.co.olimor.BMBTApi_boot.builder.ResultsAnalysisBuilder;
+import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
+import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
+import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.Test;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
@@ -33,6 +37,24 @@ public class BMBTController {
 	 */
 	@Autowired
 	private TestQuery testQuery;
+	
+	/**
+	 * {@link TestResultInsert} instance.
+	 */
+	@Autowired
+	private TestResultInsert resultInsert;
+	
+	/**
+	 * {@link ResultHistoryQuery} instance.
+	 */
+	@Autowired
+	private ResultHistoryQuery resultHistoryQuery;
+	
+	/**
+	 * {@link ResultsAnalysisBuilder} instance.
+	 */
+	@Autowired
+	private ResultsAnalysisBuilder resultAnalysisBuilder;
 	
 	/**
 	 * Method to return a {@link User} object given an id.
@@ -71,7 +93,25 @@ public class BMBTController {
 	@RequestMapping(value = "submitResult", method = RequestMethod.POST, consumes= "application/json")
 	public ResponseEntity<String> submitResult(@RequestBody TestResult result) {
 		log.entry(result);
-		return log.traceExit(new ResponseEntity<String>("Test Result submitted successfully", HttpStatus.OK));
+		
+		if (resultInsert.saveTestResult(result) == 1) 
+			return log.traceExit(new ResponseEntity<String>("Test Result submitted successfully", HttpStatus.OK));	
+		else
+			return log.traceExit(new ResponseEntity<String>("Test Result submission failed.", HttpStatus.OK));	
+	}
+	
+	/**
+	 * @return - an analysis of the test results.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/resultsAnalysis/{id}", produces = "application/json")
+	public ResponseEntity<ResultsAnalysis> getResultsAnalysis(@PathVariable("id") final Integer userId) {
+		log.entry(userId);
+		
+		final List<TestResult> resultHistory = resultHistoryQuery.getResultHistory(userId);
+		
+		final ResultsAnalysis analysis = resultAnalysisBuilder.buildResultsAnalysis(resultHistory);
+		
+		return log.traceExit(new ResponseEntity<ResultsAnalysis>(analysis, HttpStatus.OK));
 	}
 
 }

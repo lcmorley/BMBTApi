@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +24,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.Application;
 import uk.co.olimor.BMBTApi_boot.model.Question;
+import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
+import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
@@ -109,7 +113,55 @@ public class BMBTControllerTest {
 		
 		log.traceExit();
 	}
+
+	@Test
+	public void testSubmitResult()  {
+		log.traceEntry();
 		
+		final TestResult result = new TestResult(1, 1, 5, 2, 5, 10.5f);
+		 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", "application/json");       
+        HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result,headers);
+        
+        final ResponseEntity<String> response = restTemplate.postForEntity(createURLWithPort("/submitResult"), 
+        		entity, String.class); 
+        
+        Assert.assertEquals("Test Result submitted successfully", response.getBody());
+        
+		log.traceExit();
+	}
+		
+	/**
+	 * Test test results analysis happy path (/resultHistory/1).
+	 * 
+	 * @throws JSONException
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	@Test
+	public void test_ResultAnalysis_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
+		log.traceEntry();
+		
+		final ResponseEntity<ResultsAnalysis> response = restTemplate.getForEntity(createURLWithPort("/resultsAnalysis/1"), 
+					ResultsAnalysis.class);
+
+		final ResultsAnalysis expected = new ResultsAnalysis();
+
+		expected.setTotalTests(1);
+		expected.setAverageAttemptedQuestions(5);
+		expected.setAverageCorrectAnswers(5);
+		expected.setTopCorrectAnswers(5);
+		expected.setAverageTime(10.5f);
+		expected.setBestTime(10.5f);
+		
+		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+		Assert.assertEquals(expected, response.getBody());
+		
+		log.traceExit();
+	}
+	
 	/**
 	 * Create URL with port.
 	 * 

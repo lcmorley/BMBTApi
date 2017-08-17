@@ -1,11 +1,8 @@
 package uk.co.olimor.BMBTApi_boot.dao.impl;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,7 +40,6 @@ public abstract class AbstractInsert<T> {
 		try {
 			conn = datasource.getConnection();
 			stmt = conn.createStatement();
-
 			return log.traceExit(stmt.executeUpdate(buildInsert(objectToInsert)));	
 		} catch (final SQLException e) {
 			log.error("An error occurred whilst attempting to insert into the database with object: " 

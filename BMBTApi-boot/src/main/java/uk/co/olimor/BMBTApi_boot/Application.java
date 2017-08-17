@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @EnableCaching
 @ComponentScan(basePackages = {"uk.co.olimor.BMBTApi_boot.controller", 
-		"uk.co.olimor.BMBTApi_boot.dao", "uk.co.olimor.BMBTApi_boot.config"})
+		"uk.co.olimor.BMBTApi_boot.dao", "uk.co.olimor.BMBTApi_boot.config", "uk.co.olimor.BMBTApi_boot.builder"})
 @SpringBootApplication
 public class Application {
 	
