@@ -1,7 +1,5 @@
 package uk.co.olimor.BMBTApi_boot.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +15,12 @@ import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
-import uk.co.olimor.BMBTApi_boot.model.Test;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
+import uk.co.olimor.BMBTApi_boot.response.ApiResponse;
+import uk.co.olimor.BMBTApi_boot.response.ApiResponseError;
 
 @RestController
 @Log4j2
@@ -63,24 +63,34 @@ public class BMBTController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "user/{id}", produces = "application/json")
-	public ResponseEntity<User> getUser(@PathVariable("id") final Integer id) {
+	public ResponseEntity<ApiResponse> getUser(@PathVariable("id") final Integer id) {
 		log.entry(id);		
-		final User user = userQuery.getUser(id);
 		
-		if (user == null)
-			return log.traceExit(new ResponseEntity<User>(user, HttpStatus.NOT_FOUND));
+		try {			
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(
+					userQuery.getUser(id)), HttpStatus.OK));
+		} catch (final ApiException e) {
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
+					e.getStatus()));
+		}
 		
-		return log.traceExit(new ResponseEntity<User>(userQuery.getUser(id), HttpStatus.OK));
 	}
 	
 	/**
 	 * @return - a list of all possible tests.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "tests", produces = "application/json")
-	public ResponseEntity<List<Test>> getTests() {
+	public ResponseEntity<ApiResponse> getTests() {
 		log.traceEntry();
-		List<Test> tests = testQuery.getTests();
-		return log.traceExit(new ResponseEntity<List<Test>>(tests, HttpStatus.OK));
+		
+		try {
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(testQuery.getTests()), 
+					HttpStatus.OK));
+		} catch (final ApiException e) {
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
+					HttpStatus.INTERNAL_SERVER_ERROR));
+		}
+		
 	}
 	
 	/**
@@ -91,27 +101,33 @@ public class BMBTController {
 	 * @return - success message on submission.
 	 */
 	@RequestMapping(value = "submitResult", method = RequestMethod.POST, consumes= "application/json")
-	public ResponseEntity<String> submitResult(@RequestBody TestResult result) {
+	public ResponseEntity<ApiResponse> submitResult(@RequestBody final TestResult result) {
 		log.entry(result);
 		
 		if (resultInsert.saveTestResult(result) == 1) 
-			return log.traceExit(new ResponseEntity<String>("Test Result submitted successfully", HttpStatus.OK));	
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse("Test Result submitted successfully"), HttpStatus.OK));	
 		else
-			return log.traceExit(new ResponseEntity<String>("Test Result submission failed.", HttpStatus.OK));	
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse("Test Result submission failed."), HttpStatus.INTERNAL_SERVER_ERROR));	
 	}
 	
 	/**
 	 * @return - an analysis of the test results.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/resultsAnalysis/{id}", produces = "application/json")
-	public ResponseEntity<ResultsAnalysis> getResultsAnalysis(@PathVariable("id") final Integer userId) {
+	public ResponseEntity<ApiResponse> getResultsAnalysis(@PathVariable("id") final Integer userId) {
 		log.entry(userId);
 		
-		final List<TestResult> resultHistory = resultHistoryQuery.getResultHistory(userId);
-		
-		final ResultsAnalysis analysis = resultAnalysisBuilder.buildResultsAnalysis(resultHistory);
-		
-		return log.traceExit(new ResponseEntity<ResultsAnalysis>(analysis, HttpStatus.OK));
+		try {			
+			final ResultsAnalysis analysis = resultAnalysisBuilder.buildResultsAnalysis(
+					resultHistoryQuery.getResultHistory(userId));
+			
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(analysis), HttpStatus.OK));
+		} catch (final ApiException e) {
+			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
+					e.getStatus()));
+		}
 	}
-
+	
 }

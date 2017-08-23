@@ -2,6 +2,7 @@ package uk.co.olimor.BMBTApi_boot.dao;
 
 import java.util.List;
 
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 
@@ -20,6 +21,6 @@ public interface ResultHistoryQuery {
 	 * 
 	 * @return - the {@link ResultsAnalysis} object containing the results.
 	 */
-	List<TestResult> getResultHistory(final int userId);
+	List<TestResult> getResultHistory(final int userId) throws ApiException;
 	
 }

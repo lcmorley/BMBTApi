@@ -2,6 +2,7 @@ package uk.co.olimor.BMBTApi_boot.dao;
 
 import java.util.List;
 
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.Test;
 
 /**
@@ -14,6 +15,6 @@ public interface TestQuery {
 	/**
 	 * @return a {@link List} of {@link Test} objects.
 	 */
-	List<Test> getTests();
+	List<Test> getTests() throws ApiException;
 	
 }

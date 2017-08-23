@@ -1,5 +1,6 @@
 package uk.co.olimor.BMBTApi_boot.dao;
 
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
@@ -14,6 +15,6 @@ public interface UserQuery {
 	 * 
 	 * @return - a {@link User} object.
 	 */
-	User getUser(int userId);
+	User getUser(int userId) throws ApiException;
 	
 }

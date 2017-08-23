@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.Question;
 import uk.co.olimor.BMBTApi_boot.model.Test;
 
@@ -34,13 +36,13 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 	
 	@Override
 	@Cacheable("tests")
-	public List<Test> getTests() {
+	public List<Test> getTests() throws ApiException {
 		log.traceEntry();
 		return log.traceExit(query(QUERY));
 	}
 
 	@Override
-	protected List<Test> buildResult(final ResultSet result) {
+	protected List<Test> buildResult(final ResultSet result) throws ApiException {
 		log.entry(result);
 		
 		final List<Test> tests = new ArrayList<>();
@@ -62,8 +64,9 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 				
 				questions.add(new Question(result.getInt(4), result.getInt(5), result.getString(6)));
 			}
-		} catch (SQLException e) {
-			log.error("An error occurred whilst attempting to build the results.", e);
+		} catch (final SQLException e) {
+			logError(log, "An error occurred whilst attempting to build the results.", e, 
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return log.traceExit(tests);
