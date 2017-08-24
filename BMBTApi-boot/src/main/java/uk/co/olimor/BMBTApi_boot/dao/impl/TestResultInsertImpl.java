@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 
 /**
@@ -27,11 +28,13 @@ public class TestResultInsertImpl extends AbstractInsert<TestResult>implements T
 	 * Save the {@link TestResult} object to the database.
 	 * 
 	 * @param result - the {@link TestResult} to save.
+	 * @throws ApiException 
 	 */
 	@Override
-	public int saveTestResult(final TestResult result) {
+	public void saveTestResult(final TestResult result) throws ApiException {
 		log.entry(result);
-		return log.traceExit(insert(result));
+		insert(result);
+		log.traceExit();
 	}
 
 	/**

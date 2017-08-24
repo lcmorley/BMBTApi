@@ -1,5 +1,6 @@
 package uk.co.olimor.BMBTApi_boot.dao;
 
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 
 /**
@@ -17,6 +18,6 @@ public interface TestResultInsert {
 	 * 
 	 * @return - the number of rows inserted.
 	 */
-	int saveTestResult(final TestResult result);
+	void saveTestResult(final TestResult result) throws ApiException;
 	
 }

@@ -1,10 +1,7 @@
 package uk.co.olimor.BMBTApi_boot.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
@@ -27,10 +24,8 @@ public class NewUserInsertImpl extends AbstractInsert<User> implements NewUserIn
 
 		final String userId = UUID.randomUUID().toString();
 		final User user = new User(userId, userName);
-		final int result = insert(user);
-
-		if (result == 0)
-			logError(log, "The user was not inserted into the db.", null, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		insert(user);
 
 		return log.traceExit(userId);
 	}

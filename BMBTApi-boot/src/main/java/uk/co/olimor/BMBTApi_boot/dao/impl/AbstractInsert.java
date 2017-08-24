@@ -5,12 +5,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.dao.AbstractDAO;
+import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 
 /**
  * Abstract class containing common functionality.
@@ -18,7 +19,6 @@ import uk.co.olimor.BMBTApi_boot.dao.AbstractDAO;
  * @author leonmorley
  *
  */
-@Data
 @Log4j2
 public abstract class AbstractInsert<T> extends AbstractDAO {
 
@@ -31,8 +31,9 @@ public abstract class AbstractInsert<T> extends AbstractDAO {
 	/**
 	 * 
 	 * @param objectToInsert
+	 * @throws ApiException 
 	 */
-	public int insert(final T objectToInsert) {
+	public void insert(final T objectToInsert) throws ApiException {
 		log.entry(objectToInsert);
 		
 		Connection conn = null;
@@ -41,7 +42,14 @@ public abstract class AbstractInsert<T> extends AbstractDAO {
 		try {
 			conn = datasource.getConnection();
 			stmt = conn.createStatement();
-			return log.traceExit(stmt.executeUpdate(buildInsert(objectToInsert)));	
+			
+			final int result = stmt.executeUpdate(buildInsert(objectToInsert));
+			
+			if (result == 0)
+				logError(log, "The object was not inserted into the db. Value: " + objectToInsert, null, 
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			
+			log.traceExit();	
 		} catch (final SQLException e) {
 			log.error("An error occurred whilst attempting to insert into the database with object: " 
 				+ objectToInsert, e);
@@ -57,7 +65,7 @@ public abstract class AbstractInsert<T> extends AbstractDAO {
 			}
 		}
 		
-		return log.traceExit(0);
+		log.traceExit();
 	}
 
 	/**

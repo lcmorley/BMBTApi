@@ -77,8 +77,7 @@ public class BMBTController {
 			return log.traceExit(new ResponseEntity<ApiResponse>(
 					new ApiResponse(userQuery.getUser(id)), HttpStatus.OK));
 		} catch (final ApiException e) {
-			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
-					e.getStatus()));
+			return log.traceExit(buildErrorResponse(e));
 		}
 		
 	}
@@ -94,8 +93,7 @@ public class BMBTController {
 			return log.traceExit(new ResponseEntity<ApiResponse>(
 					new ApiResponse(testQuery.getTests()), HttpStatus.OK));
 		} catch (final ApiException e) {
-			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
-					HttpStatus.INTERNAL_SERVER_ERROR));
+			return log.traceExit(buildErrorResponse(e));
 		}
 		
 	}
@@ -111,12 +109,14 @@ public class BMBTController {
 	public ResponseEntity<ApiResponse> submitResult(@RequestBody final TestResult result) {
 		log.entry(result);
 		
-		if (resultInsert.saveTestResult(result) == 1) 
+		try {
+			resultInsert.saveTestResult(result);
+			
 			return log.traceExit(new ResponseEntity<ApiResponse>(
 					new ApiResponse("Test Result submitted successfully"), HttpStatus.OK));	
-		else
-			return log.traceExit(new ResponseEntity<ApiResponse>(
-					new ApiResponse("Test Result submission failed."), HttpStatus.INTERNAL_SERVER_ERROR));	
+		} catch (final ApiException e) {
+			return log.traceExit(buildErrorResponse(e));
+		}	
 	}
 	
 	/**
@@ -132,8 +132,7 @@ public class BMBTController {
 			
 			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(analysis), HttpStatus.OK));
 		} catch (final ApiException e) {
-			return log.traceExit(new ResponseEntity<ApiResponse>(
-					new ApiResponse(null, new ApiResponseError(e)), e.getStatus()));
+			return log.traceExit(buildErrorResponse(e));
 		}
 	}
 	
@@ -153,10 +152,21 @@ public class BMBTController {
 			
 			return log.traceExit(new ResponseEntity<ApiResponse>(response, HttpStatus.OK));
 		} catch (final ApiException e) {
-			return log.traceExit(new ResponseEntity<ApiResponse>(
-					new ApiResponse(null, new ApiResponseError(e)), e.getStatus()));
+			return log.traceExit(buildErrorResponse(e));
 		}
 		
+	}
+	
+	/**
+	 * Build and return a {@link ResponseEntity} with an error response.
+	 * 
+	 * @param e - the exception raised.
+	 * 
+	 * @return - the build error response.
+	 */
+	private ResponseEntity<ApiResponse> buildErrorResponse(final ApiException e) {
+		return log.traceExit(new ResponseEntity<ApiResponse>(
+				new ApiResponse(null, new ApiResponseError(e)), e.getStatus()));
 	}
 	
 }
