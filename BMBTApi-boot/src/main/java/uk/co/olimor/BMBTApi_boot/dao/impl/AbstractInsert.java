@@ -10,6 +10,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import uk.co.olimor.BMBTApi_boot.dao.AbstractDAO;
 
 /**
  * Abstract class containing common functionality.
@@ -19,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Data
 @Log4j2
-public abstract class AbstractInsert<T> {
+public abstract class AbstractInsert<T> extends AbstractDAO {
 
 	/**
 	 * Datasource object.

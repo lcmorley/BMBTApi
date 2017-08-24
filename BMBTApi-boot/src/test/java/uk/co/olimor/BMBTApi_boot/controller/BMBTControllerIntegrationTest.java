@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.Application;
-import uk.co.olimor.BMBTApi_boot.JsonMapper;
+import uk.co.olimor.BMBTApi_boot.JsonDeserialiser;
 import uk.co.olimor.BMBTApi_boot.model.Question;
 import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
@@ -54,6 +54,11 @@ public class BMBTControllerIntegrationTest {
 	final TestRestTemplate restTemplate = new TestRestTemplate();
 
 	/**
+	 * Instance of the {@link JsonDeserialiser}.
+	 */
+	final JsonDeserialiser deserialiser = new JsonDeserialiser();
+	
+	/**
 	 * Test happy path (/user/1).
 	 * 
 	 * @throws JSONException
@@ -61,16 +66,14 @@ public class BMBTControllerIntegrationTest {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void test_User_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
 		log.traceEntry();
 		ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/user/1"),
 				ApiResponse.class);
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		final User responseUser = new JsonMapper()
-				.convertJsonToUser((Map<String, String>) response.getBody().getObject());
-		final User expectedUser = new User(1, "Oliver AWS");
+		final User responseUser = deserialiser.deserialiseToUser(getObjectMapFromResponse(response));
+		final User expectedUser = new User("1", "Oliver AWS");
 
 		Assert.assertEquals(expectedUser, responseUser);
 
@@ -115,8 +118,8 @@ public class BMBTControllerIntegrationTest {
 		final uk.co.olimor.BMBTApi_boot.model.Test expected = new uk.co.olimor.BMBTApi_boot.model.Test(1, "Reception",
 				20, questions);
 
-		List<uk.co.olimor.BMBTApi_boot.model.Test> tests = new JsonMapper().convertJsonToTests((List<uk.co.olimor.BMBTApi_boot.model.Test>) 
-				response.getBody().getObject());
+		List<uk.co.olimor.BMBTApi_boot.model.Test> tests = deserialiser.deserialiseJsonToTests(
+				(List<uk.co.olimor.BMBTApi_boot.model.Test>) response.getBody().getObject());
 
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 		Assert.assertEquals(1, tests.size());
@@ -151,7 +154,6 @@ public class BMBTControllerIntegrationTest {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void test_ResultAnalysis_Happy()
 			throws JSONException, JsonParseException, JsonMappingException, IOException {
@@ -170,8 +172,7 @@ public class BMBTControllerIntegrationTest {
 		expected.setBestTime(10.5f);
 
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(expected, new JsonMapper().convertJsonToResultsAnalysis((Map<String, String>) 
-				response.getBody().getObject()));
+		Assert.assertEquals(expected, deserialiser.deserialiseToResultsAnalysis(getObjectMapFromResponse(response)));
 
 		log.traceExit();
 	}
@@ -218,35 +219,33 @@ public class BMBTControllerIntegrationTest {
 		log.traceExit();
 	}
 
-	// /**
-	// * Test test results analysis happy path (/resultHistory/1).
-	// *
-	// * @throws JSONException
-	// * @throws IOException
-	// * @throws JsonMappingException
-	// * @throws JsonParseException
-	// */
-	// @Test
-	// public void test_CreateUser_Happy() throws JSONException, JsonParseException,
-	// JsonMappingException, IOException {
-	// log.traceEntry();
-	//
-	// final String userName = "TestName";
-	//
-	// HttpHeaders headers = new HttpHeaders();
-	// headers.set("content-type", "application/json");
-	// HttpEntity<String> entity = new HttpEntity<String>(userName, headers);
-	//
-	// final ResponseEntity<ApiResponse> response =
-	// restTemplate.postForEntity(createURLWithPort("/createUser"), entity,
-	// ApiResponse.class);
-	//
-	// final int userId = (Integer) response.getBody().getObject();
-	//
-	// Assert.assertTrue(userId > 0);
-	//
-	// log.traceExit();
-	// }
+	/**
+	 * Test test results analysis happy path (/resultHistory/1).
+	 *
+	 * @throws JSONException
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	@Test
+	public void test_CreateUser_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
+		log.traceEntry();
+
+		final String userName = "TestName";
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		HttpEntity<String> entity = new HttpEntity<String>(userName, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
+				entity, ApiResponse.class);
+
+		final String userId = (String) response.getBody().getObject();
+
+		Assert.assertFalse(userId.isEmpty());
+
+		log.traceExit();
+	 }
 
 	/**
 	 * Create URL with port.
@@ -259,6 +258,17 @@ public class BMBTControllerIntegrationTest {
 	private String createURLWithPort(String uri) {
 		log.traceEntry();
 		return log.traceExit("http://localhost:" + port + uri);
+	}
+	
+	/**
+	 * @param response - the response from the call to the API.
+	 * 
+	 * @return - the response Object as the Map<String, String> representation.
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, String> getObjectMapFromResponse(final ResponseEntity<ApiResponse> response) {
+		log.traceEntry();
+		return log.traceExit((Map<String, String>) response.getBody().getObject());
 	}
 
 }

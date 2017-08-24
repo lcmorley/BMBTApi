@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.builder.ResultsAnalysisBuilder;
+import uk.co.olimor.BMBTApi_boot.dao.NewUserInsert;
 import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
@@ -51,6 +52,12 @@ public class BMBTController {
 	private ResultHistoryQuery resultHistoryQuery;
 	
 	/**
+	 * {@link NewUserInsert} instance.
+	 */
+	@Autowired
+	private NewUserInsert newUserInsert;
+	
+	/**
 	 * {@link ResultsAnalysisBuilder} instance.
 	 */
 	@Autowired
@@ -67,8 +74,8 @@ public class BMBTController {
 		log.entry(id);		
 		
 		try {			
-			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(
-					userQuery.getUser(id)), HttpStatus.OK));
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse(userQuery.getUser(id)), HttpStatus.OK));
 		} catch (final ApiException e) {
 			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
 					e.getStatus()));
@@ -84,8 +91,8 @@ public class BMBTController {
 		log.traceEntry();
 		
 		try {
-			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(testQuery.getTests()), 
-					HttpStatus.OK));
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse(testQuery.getTests()), HttpStatus.OK));
 		} catch (final ApiException e) {
 			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
 					HttpStatus.INTERNAL_SERVER_ERROR));
@@ -125,9 +132,31 @@ public class BMBTController {
 			
 			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(analysis), HttpStatus.OK));
 		} catch (final ApiException e) {
-			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(null, new ApiResponseError(e)), 
-					e.getStatus()));
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse(null, new ApiResponseError(e)), e.getStatus()));
 		}
+	}
+	
+	/**
+	 * @return - an analysis of the test results.
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/createUser", consumes = "application/json", 
+			produces = "application/json")
+	public ResponseEntity<ApiResponse> createUser(@RequestBody final String userName) {
+		log.entry(userName);
+		
+		try {
+			final String userId = newUserInsert.insertUser(userName);
+			
+			final ApiResponse response = new ApiResponse();
+			response.setObject(userId);
+			
+			return log.traceExit(new ResponseEntity<ApiResponse>(response, HttpStatus.OK));
+		} catch (final ApiException e) {
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse(null, new ApiResponseError(e)), e.getStatus()));
+		}
+		
 	}
 	
 }

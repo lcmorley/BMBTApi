@@ -1,7 +1,7 @@
 USE bmbtschema;
 
 CREATE TABLE users (
-	id int,
+	id varchar(100),
 	firstname varchar(50)
 );
 

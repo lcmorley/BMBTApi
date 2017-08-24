@@ -45,7 +45,7 @@ public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 
 		try {
 			while (result.next())
-				users.add(new User(result.getInt(1), result.getString(2)));
+				users.add(new User(result.getString(1), result.getString(2)));
 		} catch (final SQLException e) {
 			logError(log, "An error occurred whilst attempting to build the results.", e, 
 					HttpStatus.INTERNAL_SERVER_ERROR);			

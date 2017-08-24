@@ -15,14 +15,14 @@ import uk.co.olimor.BMBTApi_boot.model.Test;
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
- * Map from Json to Object and back again.
+ * Class which provides utility methods to map from Json strings to Object representation.
  * 
  * @author leonmorley
  *
  * @param <T>
  */
 @Log4j2
-public class JsonMapper {
+public class JsonDeserialiser {
 
 	/**
 	 * Convert from a JSON string to an object.
@@ -34,7 +34,7 @@ public class JsonMapper {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public User convertJsonToUser(final Map<String, String> json)
+	public User deserialiseToUser(final Map<String, String> json)
 			throws JsonParseException, JsonMappingException, IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		return log.traceExit((User) mapper.convertValue(json, 
@@ -51,7 +51,7 @@ public class JsonMapper {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public ResultsAnalysis convertJsonToResultsAnalysis(final Map<String, String> json)
+	public ResultsAnalysis deserialiseToResultsAnalysis(final Map<String, String> json)
 			throws JsonParseException, JsonMappingException, IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		return log.traceExit((ResultsAnalysis) mapper.convertValue(json, 
@@ -68,7 +68,8 @@ public class JsonMapper {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public List<Test> convertJsonToTests(final List<Test> json)
+	@SuppressWarnings("unchecked")
+	public List<Test> deserialiseJsonToTests(final List<Test> json)
 			throws JsonParseException, JsonMappingException, IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		return log.traceExit((List<Test>) mapper.convertValue(json, 

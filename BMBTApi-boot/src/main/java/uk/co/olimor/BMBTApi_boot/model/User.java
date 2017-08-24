@@ -18,7 +18,7 @@ public class User {
 	/**
 	 * Id value.
 	 */
-	private int id;
+	private String id;
 	
 	/**
 	 * First Name.
