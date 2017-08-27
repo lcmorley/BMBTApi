@@ -26,10 +26,10 @@ public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 	/**
 	 * Get users.
 	 */
-	public User getUser(int userId) throws ApiException {
+	public User getUser(final String userId) throws ApiException {
 		log.traceEntry();
 		
-		final List<User> users = query("SELECT * FROM users where id=" + userId);	
+		final List<User> users = query("SELECT * FROM users where id = '" + userId + "'");	
 		
 		if (users.size() == 0) 
 			logError(log, "Unable to find user with id: " + userId, HttpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 	}
 
 	@Override
-	protected List<User> buildResult(final ResultSet result) throws ApiException {
+	protected List<User> buildResult(final ResultSet result) throws SQLException {
 		log.entry(result);
 
 		final List<User> users = new ArrayList<>();
@@ -47,8 +47,8 @@ public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 			while (result.next())
 				users.add(new User(result.getString(1), result.getString(2)));
 		} catch (final SQLException e) {
-			logError(log, "An error occurred whilst attempting to build the results.", e, 
-					HttpStatus.INTERNAL_SERVER_ERROR);			
+			log.error("An error occurred whilst attempting to build the results.", e);
+			throw e;
 		}
 
 		return log.traceExit(users);

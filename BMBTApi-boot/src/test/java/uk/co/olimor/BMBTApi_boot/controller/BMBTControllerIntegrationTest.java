@@ -146,6 +146,24 @@ public class BMBTControllerIntegrationTest {
 		log.traceExit();
 	}
 
+	@Test
+	public void testSubmitResult_Unknown_Test() {
+		log.traceEntry();
+
+		final TestResult result = new TestResult(1, 100, 5, 2, 5, 10.5f);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+		log.traceExit();
+	}
+
 	/**
 	 * Test test results analysis happy path (/resultHistory/1).
 	 * 

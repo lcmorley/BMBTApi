@@ -15,6 +15,6 @@ public interface UserQuery {
 	 * 
 	 * @return - a {@link User} object.
 	 */
-	User getUser(int userId) throws ApiException;
+	User getUser(String userId) throws ApiException;
 	
 }

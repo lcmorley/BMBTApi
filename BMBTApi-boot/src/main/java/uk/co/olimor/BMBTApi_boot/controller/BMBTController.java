@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.builder.ResultsAnalysisBuilder;
 import uk.co.olimor.BMBTApi_boot.dao.NewUserInsert;
 import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
+import uk.co.olimor.BMBTApi_boot.dao.TestExistsQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
@@ -38,6 +39,12 @@ public class BMBTController {
 	 */
 	@Autowired
 	private TestQuery testQuery;
+	
+	/**
+	 * {@link TestExistsQuery} instance.
+	 */
+	@Autowired
+	private TestExistsQuery testExistsQuery;
 	
 	/**
 	 * {@link TestResultInsert} instance.
@@ -70,7 +77,7 @@ public class BMBTController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "user/{id}", produces = "application/json")
-	public ResponseEntity<ApiResponse> getUser(@PathVariable("id") final Integer id) {
+	public ResponseEntity<ApiResponse> getUser(@PathVariable("id") final String id) {
 		log.entry(id);		
 		
 		try {			
@@ -110,6 +117,9 @@ public class BMBTController {
 		log.entry(result);
 		
 		try {
+			if (!testExistsQuery.testExists(result.getTestId()))
+				throw new ApiException("Test was not found with the id: " + result.getTestId(), HttpStatus.NOT_FOUND);
+			
 			resultInsert.saveTestResult(result);
 			
 			return log.traceExit(new ResponseEntity<ApiResponse>(

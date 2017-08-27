@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +41,7 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 	}
 
 	@Override
-	protected List<Test> buildResult(final ResultSet result) throws ApiException {
+	protected List<Test> buildResult(final ResultSet result) throws SQLException {
 		log.entry(result);
 		
 		final List<Test> tests = new ArrayList<>();
@@ -65,8 +64,8 @@ public class TestQueryImpl extends AbstractQuery<Test> implements TestQuery {
 				questions.add(new Question(result.getInt(4), result.getInt(5), result.getString(6)));
 			}
 		} catch (final SQLException e) {
-			logError(log, "An error occurred whilst attempting to build the results.", e, 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			log.error("An exception occurred whilst attempting to retrieve a Test.",  e);
+			throw e;
 		}
 		
 		return log.traceExit(tests);

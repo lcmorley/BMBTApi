@@ -78,6 +78,6 @@ public abstract class AbstractQuery<T> extends AbstractDAO {
 	 * 
 	 * @return results converted to a {@link List} of T.
 	 */
-	protected abstract List<T> buildResult(final ResultSet result) throws ApiException;
+	protected abstract List<T> buildResult(final ResultSet result) throws SQLException;
 
 }

@@ -41,16 +41,16 @@ public class ResultsHistoryQueryImpl extends AbstractQuery<TestResult> implement
 	}
 
 	@Override
-	protected List<TestResult> buildResult(ResultSet result) throws ApiException {
+	protected List<TestResult> buildResult(ResultSet result) throws SQLException {
 		final List<TestResult> results = new ArrayList<>();
 
 		try {
 			while (result.next()) 
 				results.add(new TestResult(result.getInt(1), result.getInt(2), result.getInt(3), result.getInt(4), 
 						result.getInt(5), result.getFloat(6)));			
-		} catch (SQLException e) {
-			logError(log, "An error occurred whilst attempting to build the results.", e, 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (final SQLException e) {
+			log.error("An error occurred whilst attempting to build the results.", e);
+			throw e;			
 		}
 		
 		return log.traceExit(results);
