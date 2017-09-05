@@ -132,7 +132,7 @@ public class BMBTControllerIntegrationTest {
 	public void testSubmitResult() {
 		log.traceEntry();
 
-		final TestResult result = new TestResult(1, 1, 5, 2, 5, 10.5f);
+		final TestResult result = new TestResult(1, 1, 5, 2, 10.5f);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
@@ -150,7 +150,7 @@ public class BMBTControllerIntegrationTest {
 	public void testSubmitResult_Unknown_Test() {
 		log.traceEntry();
 
-		final TestResult result = new TestResult(1, 100, 5, 2, 5, 10.5f);
+		final TestResult result = new TestResult(1, 100, 5, 2, 10.5f);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
@@ -183,7 +183,7 @@ public class BMBTControllerIntegrationTest {
 		final ResultsAnalysis expected = new ResultsAnalysis();
 
 		expected.setTotalTests(1);
-		expected.setAverageAttemptedQuestions(5);
+		expected.setAverageAttemptedQuestions(7);
 		expected.setAverageCorrectAnswers(5);
 		expected.setTopCorrectAnswers(5);
 		expected.setAverageTime(10.5f);

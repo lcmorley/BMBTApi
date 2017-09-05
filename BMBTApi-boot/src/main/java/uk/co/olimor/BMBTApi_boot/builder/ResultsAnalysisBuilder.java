@@ -48,7 +48,9 @@ public final class ResultsAnalysisBuilder {
 			if (topCorrectAnswers < result.getCorrectAnswers()) 
 				topCorrectAnswers = result.getCorrectAnswers();
 			
-			totalAttemptedAnswers += result.getAttemptedAnswers();
+			totalAttemptedAnswers += result.getCorrectAnswers();
+			totalAttemptedAnswers += result.getIncorrectAnswers();
+			
 			totalCorrectAnswers += result.getCorrectAnswers();
 		}
 		

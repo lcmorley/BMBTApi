@@ -34,11 +34,6 @@ public class TestResult {
 	private int incorrectAnswers;
 	
 	/**
-	 * The number of attempted answers.
-	 */
-	private int attemptedAnswers;
-	
-	/**
 	 * Elapsed time for the completion of the test.
 	 */
 	private float elapsedTime;

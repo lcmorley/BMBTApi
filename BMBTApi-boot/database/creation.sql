@@ -29,7 +29,6 @@ CREATE TABLE testResult (
     testId int,
     correctAnswers int,
     incorrectAnswers int,
-    attemptedAnswers int,
     timeElapsed float,
     testDate datetime
 )

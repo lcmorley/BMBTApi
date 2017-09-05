@@ -22,7 +22,7 @@ public class TestResultInsertImpl extends AbstractInsert<TestResult>implements T
 	/**
 	 * Insert statement with placeholders.
 	 */
-	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES (%x, %x, %x, %x, %x, %f, '%s')";	
+	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES (%x, %x, %x, %x, %f, '%s')";	
 	
 	/**
 	 * Save the {@link TestResult} object to the database.
@@ -47,8 +47,7 @@ public class TestResultInsertImpl extends AbstractInsert<TestResult>implements T
 		final String currentTime = format.format(new Date());
 		
 		return log.traceExit(String.format(INSERT_STATEMENT, result.getUserId(), result.getTestId(), 
-				result.getCorrectAnswers(), result.getIncorrectAnswers(), result.getAttemptedAnswers(), 
-				result.getElapsedTime(), currentTime));
+				result.getCorrectAnswers(), result.getIncorrectAnswers(), result.getElapsedTime(), currentTime));
 	}
 
 }
