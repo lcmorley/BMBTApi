@@ -15,7 +15,7 @@ import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 @Log4j2
 public class TestExistsQueryImpl extends AbstractQuery<Boolean> implements TestExistsQuery {
 
-	private final String QUERY = "SELECT COUNT(*) FROM test WHERE id = %x";
+	private final String QUERY = "SELECT COUNT(*) FROM test WHERE id = %d";
 	
 	@Override
 	public boolean testExists(final int testId) throws ApiException {
