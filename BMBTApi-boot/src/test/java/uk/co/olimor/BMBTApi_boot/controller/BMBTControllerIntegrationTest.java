@@ -28,6 +28,7 @@ import uk.co.olimor.BMBTApi_boot.model.Question;
 import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
+import uk.co.olimor.BMBTApi_boot.requestmodel.CreateUserRequest;
 import uk.co.olimor.BMBTApi_boot.response.ApiResponse;
 
 /**
@@ -73,7 +74,7 @@ public class BMBTControllerIntegrationTest {
 				ApiResponse.class);
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 		final User responseUser = deserialiser.deserialiseToUser(getObjectMapFromResponse(response));
-		final User expectedUser = new User("1", "Oliver AWS");
+		final User expectedUser = new User("1", "deviceId1", "Oliver AWS");
 
 		Assert.assertEquals(expectedUser, responseUser);
 
@@ -96,6 +97,28 @@ public class BMBTControllerIntegrationTest {
 		log.traceExit();
 	}
 
+	/**
+	 * Test the endpoint /usersByDeviceId.
+	 * 
+	 * @throws JSONException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	@Test
+	public void test_UsersByDeviceId_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
+		log.traceEntry();
+		final ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/usersByDeviceId/deviceId1"),
+				ApiResponse.class);
+		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+		final List<User> responseUser = deserialiser.deserialiseToUsers((List<User>) response.getBody().getObject());
+		final User expectedUser = new User("1", "deviceId1", "Oliver AWS");
+
+		Assert.assertEquals(expectedUser, responseUser.get(0));
+
+		log.traceExit();
+	}
+	
 	/**
 	 * Test happy path (/user/1).
 	 * 
@@ -249,11 +272,14 @@ public class BMBTControllerIntegrationTest {
 	public void test_CreateUser_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
 		log.traceEntry();
 
-		final String userName = "TestName";
+		final CreateUserRequest user = new CreateUserRequest();
+		
+		user.setUserName("TestName");
+		user.setDeviceId("deviceId");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		HttpEntity<String> entity = new HttpEntity<String>(userName, headers);
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, headers);
 
 		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
 				entity, ApiResponse.class);

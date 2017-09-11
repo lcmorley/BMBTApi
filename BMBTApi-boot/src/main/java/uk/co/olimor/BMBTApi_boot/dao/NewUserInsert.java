@@ -14,11 +14,12 @@ public interface NewUserInsert {
 	 * Insert a user into the db.
 	 * 
 	 * @param userName - the user name.
+	 * @param deviceId - the id of the device.
 	 * 
 	 * @return - the new user id.
 	 * 
 	 * @throws ApiException - exception thrown when a failure occurs.
 	 */
-	String insertUser(final String userName) throws ApiException;
+	String insertUser(final String userName, final String deviceId) throws ApiException;
 	
 }

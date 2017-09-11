@@ -16,14 +16,14 @@ public class NewUserInsertImpl extends AbstractInsert<User> implements NewUserIn
 	/**
 	 * Insert statement with placeholders.
 	 */
-	private static final String INSERT_STATEMENT = "INSERT INTO users VALUES ('%s', '%s')";
+	private static final String INSERT_STATEMENT = "INSERT INTO users VALUES ('%s', '%s', '%s')";
 
 	@Override
-	public String insertUser(String userName) throws ApiException {
+	public String insertUser(final String userName, final String deviceId) throws ApiException {
 		log.entry(userName);
 
 		final String userId = UUID.randomUUID().toString();
-		final User user = new User(userId, userName);
+		final User user = new User(userId, deviceId, userName);
 		
 		insert(user);
 
@@ -33,7 +33,7 @@ public class NewUserInsertImpl extends AbstractInsert<User> implements NewUserIn
 	@Override
 	protected String buildInsert(User user) {
 		log.entry(user);
-		return log.traceExit(String.format(INSERT_STATEMENT, user.getId(), user.getFirstName()));
+		return log.traceExit(String.format(INSERT_STATEMENT, user.getId(), user.getDeviceId(), user.getFirstName()));
 	}
 
 }

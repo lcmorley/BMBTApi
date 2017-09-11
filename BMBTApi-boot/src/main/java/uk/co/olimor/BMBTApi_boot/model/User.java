@@ -21,6 +21,11 @@ public class User {
 	private String id;
 	
 	/**
+	 * Device Id.
+	 */
+	private String deviceId;
+	
+	/**
 	 * First Name.
 	 */
 	private String firstName;

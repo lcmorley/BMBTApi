@@ -1,9 +1,9 @@
 #Test users
 INSERT INTO users
-VALUES (1, "Oliver AWS");
+VALUES (1, "deviceId1", "Oliver AWS");
 
 INSERT INTO users
-VALUES (2, "Eva");
+VALUES (2, "deviceId2", "Eva");
 
 
 #Test

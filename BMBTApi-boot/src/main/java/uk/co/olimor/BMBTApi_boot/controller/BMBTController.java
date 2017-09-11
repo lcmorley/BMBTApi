@@ -17,10 +17,12 @@ import uk.co.olimor.BMBTApi_boot.dao.TestExistsQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
+import uk.co.olimor.BMBTApi_boot.dao.UsersByDeviceIdQuery;
 import uk.co.olimor.BMBTApi_boot.exception.ApiException;
 import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
+import uk.co.olimor.BMBTApi_boot.requestmodel.CreateUserRequest;
 import uk.co.olimor.BMBTApi_boot.response.ApiResponse;
 import uk.co.olimor.BMBTApi_boot.response.ApiResponseError;
 
@@ -59,6 +61,12 @@ public class BMBTController {
 	private ResultHistoryQuery resultHistoryQuery;
 	
 	/**
+	 * {@link UsersByDeviceIdQuery} instance.
+	 */
+	@Autowired
+	private UsersByDeviceIdQuery usersByDeviceIdQuery;
+	
+	/**
 	 * {@link NewUserInsert} instance.
 	 */
 	@Autowired
@@ -87,6 +95,25 @@ public class BMBTController {
 			return log.traceExit(buildErrorResponse(e));
 		}
 		
+	}
+	
+	/**
+	 * Endpoint to retrieve users by a device id.
+	 * 
+	 * @param id - the id to retrieve by.
+	 * 
+	 * @return - the Users.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "usersByDeviceId/{id}", produces = "application/json")
+	public ResponseEntity<ApiResponse> getUsersByDeviceId(@PathVariable("id") final String id) {
+		log.entry(id);		
+		
+		try {			
+			return log.traceExit(new ResponseEntity<ApiResponse>(
+					new ApiResponse(usersByDeviceIdQuery.getUsersByDeviceId(id)), HttpStatus.OK));
+		} catch (final ApiException e) {
+			return log.traceExit(buildErrorResponse(e));
+		}
 	}
 	
 	/**
@@ -151,11 +178,11 @@ public class BMBTController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/createUser", consumes = "application/json", 
 			produces = "application/json")
-	public ResponseEntity<ApiResponse> createUser(@RequestBody final String userName) {
-		log.entry(userName);
+	public ResponseEntity<ApiResponse> createUser(@RequestBody final CreateUserRequest user) {
+		log.entry(user);
 		
 		try {
-			final String userId = newUserInsert.insertUser(userName);
+			final String userId = newUserInsert.insertUser(user.getUserName(), user.getDeviceId());
 			
 			final ApiResponse response = new ApiResponse();
 			response.setObject(userId);

@@ -2,6 +2,7 @@ USE bmbtschema;
 
 CREATE TABLE users (
 	id varchar(100),
+	deviceId varchar(100),
 	firstname varchar(50)
 );
 

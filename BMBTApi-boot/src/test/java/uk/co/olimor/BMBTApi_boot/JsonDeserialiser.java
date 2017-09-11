@@ -27,15 +27,14 @@ public class JsonDeserialiser {
 	/**
 	 * Convert from a JSON string to an object.
 	 * 
-	 * @param json
-	 * @param clazz
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
+	 * @param json - the object to deserialize.
+	 *
+	 * @return - the {@link User} object.
+	 *
+	 * @throws IOException - the exception thrown.
 	 */
 	public User deserialiseToUser(final Map<String, String> json)
-			throws JsonParseException, JsonMappingException, IOException {
+			throws IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		return log.traceExit((User) mapper.convertValue(json, 
 				new TypeReference<User>() {}));
@@ -44,15 +43,31 @@ public class JsonDeserialiser {
 	/**
 	 * Convert from a JSON string to an object.
 	 * 
-	 * @param json
-	 * @param clazz
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
+	 * @param json - object to deserialize.
+	 *
+	 * @return - a {@link List} or {@link User} objects.
+	 * 
+	 * @throws IOException - an exception thrown.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> deserialiseToUsers(final List<User> json)
+			throws IOException {
+		final ObjectMapper mapper = new ObjectMapper();
+		return log.traceExit((List<User>) mapper.convertValue(json, 
+				new TypeReference<List<User>>() {}));
+	}
+	
+	/**
+	 * Convert from a JSON string to an object.
+	 * 
+	 * @param json - the json to deserialize.
+	 * 
+	 * @return - the {@link ResultsAnalysis} object to return.
+	 * 
+	 * @throws IOException - an exception thrown.
 	 */
 	public ResultsAnalysis deserialiseToResultsAnalysis(final Map<String, String> json)
-			throws JsonParseException, JsonMappingException, IOException {
+			throws IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		return log.traceExit((ResultsAnalysis) mapper.convertValue(json, 
 				new TypeReference<ResultsAnalysis>() {}));
@@ -61,12 +76,11 @@ public class JsonDeserialiser {
 	/**
 	 * Convert from a JSON string to an object.
 	 * 
-	 * @param json
-	 * @param clazz
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
+	 * @param json - the json object to deserialize.
+	 * 
+	 * @return - the {@link List} of {@link Test} objects.
+	 * 
+	 * @throws IOException - the exception thrown.
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Test> deserialiseJsonToTests(final List<Test> json)
