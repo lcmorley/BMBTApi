@@ -26,7 +26,7 @@ CREATE TABLE operator (
 );
 
 CREATE TABLE testResult (
-	userId int,
+	userId varchar(100),
     testId int,
     correctAnswers int,
     incorrectAnswers int,

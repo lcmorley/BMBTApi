@@ -16,7 +16,7 @@ public class TestResult {
 	/**
 	 * Id of the user who performed the test.
 	 */
-	private int userId;
+	private String userId;
 	
 	/**
 	 * The id of the test which was performed.

@@ -22,7 +22,7 @@ public class TestResultInsertImpl extends AbstractInsert<TestResult>implements T
 	/**
 	 * Insert statement with placeholders.
 	 */
-	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES (%d, %d, %d, %d, %f, '%s')";	
+	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES (%s, %d, %d, %d, %f, '%s')";	
 	
 	/**
 	 * Save the {@link TestResult} object to the database.
