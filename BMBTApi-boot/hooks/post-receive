@@ -1,1 +1,1 @@
-curl http://2a02:c7f:6830:300:106e:7f18:b83:2d30:8080/git/notifyCommit?url=https://github.com/lcmorley/bigmathsbeatthatipad.git
+curl http://94.194.131.93:8080/git/notifyCommit?url=https://github.com/lcmorley/bigmathsbeatthatipad.git
