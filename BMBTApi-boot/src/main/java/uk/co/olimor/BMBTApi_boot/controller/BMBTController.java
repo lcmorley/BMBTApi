@@ -160,7 +160,7 @@ public class BMBTController {
 	 * @return - an analysis of the test results.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/resultsAnalysis/{id}", produces = "application/json")
-	public ResponseEntity<ApiResponse> getResultsAnalysis(@PathVariable("id") final Integer userId) {
+	public ResponseEntity<ApiResponse> getResultsAnalysis(@PathVariable("id") final String userId) {
 		log.entry(userId);
 		
 		try {			

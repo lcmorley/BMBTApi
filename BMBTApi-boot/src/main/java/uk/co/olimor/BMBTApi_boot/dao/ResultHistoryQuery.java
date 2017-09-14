@@ -21,6 +21,6 @@ public interface ResultHistoryQuery {
 	 * 
 	 * @return - the {@link ResultsAnalysis} object containing the results.
 	 */
-	List<TestResult> getResultHistory(final int userId) throws ApiException;
+	List<TestResult> getResultHistory(final String userId) throws ApiException;
 	
 }

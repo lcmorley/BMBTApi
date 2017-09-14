@@ -105,6 +105,7 @@ public class BMBTControllerIntegrationTest {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test_UsersByDeviceId_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
 		log.traceEntry();

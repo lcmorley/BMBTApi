@@ -26,10 +26,10 @@ public class ResultsHistoryQueryImpl extends AbstractQuery<TestResult> implement
 	/**
 	 * Query.
 	 */
-	private static final String QUERY = "SELECT * FROM testResult WHERE userId = %d";
+	private static final String QUERY = "SELECT * FROM testResult WHERE userId = '%s'";
 
 	@Override
-	public List<TestResult> getResultHistory(final int userId) throws ApiException {
+	public List<TestResult> getResultHistory(final String userId) throws ApiException {
 		log.entry(userId);
 		
 		final List<TestResult> results = query(String.format(QUERY, userId));
