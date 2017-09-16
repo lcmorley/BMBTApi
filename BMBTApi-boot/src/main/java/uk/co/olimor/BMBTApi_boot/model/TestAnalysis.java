@@ -1,16 +1,23 @@
 package uk.co.olimor.BMBTApi_boot.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Object which contains the results analysis.
+ * Analysis of results for a given test.
  * 
  * @author leonmorley
  *
  */
 @Data
-public class ResultsAnalysis {
+@NoArgsConstructor
+public class TestAnalysis {
 
+	/**
+	 * Id of the test which this analysis applies to.
+	 */
+	private int testId;
+	
 	/**
 	 * Total Tests carried out.
 	 */
@@ -40,5 +47,14 @@ public class ResultsAnalysis {
 	 * The best time.
 	 */
 	private float bestTime;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param testId
+	 */
+	public TestAnalysis(final int testId) {
+		this.testId = testId;
+	}
 	
 }

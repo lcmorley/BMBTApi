@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.Application;
 import uk.co.olimor.BMBTApi_boot.JsonDeserialiser;
 import uk.co.olimor.BMBTApi_boot.model.Question;
-import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
+import uk.co.olimor.BMBTApi_boot.model.TestAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
 import uk.co.olimor.BMBTApi_boot.requestmodel.CreateUserRequest;
@@ -196,6 +196,7 @@ public class BMBTControllerIntegrationTest {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test_ResultAnalysis_Happy()
 			throws JSONException, JsonParseException, JsonMappingException, IOException {
@@ -204,17 +205,21 @@ public class BMBTControllerIntegrationTest {
 		final ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/resultsAnalysis/1"),
 				ApiResponse.class);
 
-		final ResultsAnalysis expected = new ResultsAnalysis();
+		final List<TestAnalysis> expected = new ArrayList<>();
 
-		expected.setTotalTests(1);
-		expected.setAverageAttemptedQuestions(7);
-		expected.setAverageCorrectAnswers(5);
-		expected.setTopCorrectAnswers(5);
-		expected.setAverageTime(10.5f);
-		expected.setBestTime(10.5f);
+		TestAnalysis analysis = new TestAnalysis(1);
+		analysis.setTotalTests(1);
+		analysis.setAverageAttemptedQuestions(7);
+		analysis.setAverageCorrectAnswers(5);
+		analysis.setTopCorrectAnswers(5);
+		analysis.setAverageTime(10.5f);
+		analysis.setBestTime(10.5f);
 
+		expected.add(analysis);
+		
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(expected, deserialiser.deserialiseToResultsAnalysis(getObjectMapFromResponse(response)));
+		Assert.assertEquals(expected, deserialiser.deserialiseToTestAnalysisList((List<TestAnalysis>) 
+				response.getBody().getObject()));
 
 		log.traceExit();
 	}

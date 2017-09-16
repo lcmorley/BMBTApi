@@ -3,7 +3,6 @@ package uk.co.olimor.BMBTApi_boot.dao;
 import java.util.List;
 
 import uk.co.olimor.BMBTApi_boot.exception.ApiException;
-import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 
 /**

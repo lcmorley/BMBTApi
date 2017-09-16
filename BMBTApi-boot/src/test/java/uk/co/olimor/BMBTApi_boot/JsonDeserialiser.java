@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.Test;
+import uk.co.olimor.BMBTApi_boot.model.TestAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.User;
 
 /**
@@ -66,11 +66,12 @@ public class JsonDeserialiser {
 	 * 
 	 * @throws IOException - an exception thrown.
 	 */
-	public ResultsAnalysis deserialiseToResultsAnalysis(final Map<String, String> json)
+	@SuppressWarnings("unchecked")
+	public List<TestAnalysis> deserialiseToTestAnalysisList(final List<TestAnalysis> json)
 			throws IOException {
 		final ObjectMapper mapper = new ObjectMapper();
-		return log.traceExit((ResultsAnalysis) mapper.convertValue(json, 
-				new TypeReference<ResultsAnalysis>() {}));
+		return log.traceExit((List<TestAnalysis>) mapper.convertValue(json, 
+				new TypeReference<List<TestAnalysis>>() {}));
 	}
 
 	/**

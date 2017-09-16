@@ -1,5 +1,7 @@
 package uk.co.olimor.BMBTApi_boot.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 import uk.co.olimor.BMBTApi_boot.dao.UserQuery;
 import uk.co.olimor.BMBTApi_boot.dao.UsersByDeviceIdQuery;
 import uk.co.olimor.BMBTApi_boot.exception.ApiException;
-import uk.co.olimor.BMBTApi_boot.model.ResultsAnalysis;
+import uk.co.olimor.BMBTApi_boot.model.TestAnalysis;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
 import uk.co.olimor.BMBTApi_boot.model.User;
 import uk.co.olimor.BMBTApi_boot.requestmodel.CreateUserRequest;
@@ -164,7 +166,7 @@ public class BMBTController {
 		log.entry(userId);
 		
 		try {			
-			final ResultsAnalysis analysis = resultAnalysisBuilder.buildResultsAnalysis(
+			final List<TestAnalysis> analysis = resultAnalysisBuilder.buildResultsAnalysis(
 					resultHistoryQuery.getResultHistory(userId));
 			
 			return log.traceExit(new ResponseEntity<ApiResponse>(new ApiResponse(analysis), HttpStatus.OK));
