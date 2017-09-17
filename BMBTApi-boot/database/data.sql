@@ -19,6 +19,9 @@ VALUES (2, "Year 1", 30);
 INSERT INTO test
 VALUES (3, "Total Recall 3", 90);
 
+INSERT INTO test
+VALUES (4, "Year 4", 60);
+
 INSERT INTO testQuestion 
 VALUES (1, 1, 4, 4, 1);
 
@@ -218,6 +221,155 @@ VALUES (39, 3, 5, 8, 1);
 
 INSERT INTO testQuestion
 VALUES (40, 3, 8, 10, 3);
+
+
+
+
+INSERT INTO testQuestion
+VALUES (1, 4, 5, 5, 1);
+
+INSERT INTO testQuestion
+VALUES (2, 4, 7, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (3, 4, 5, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (4, 4, 9, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (5, 4, 8, 6, 1);
+
+INSERT INTO testQuestion
+VALUES (6, 4, 4, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (7, 4, 5, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (8, 4, 9, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (9, 4, 8, 8, 3);
+
+INSERT INTO testQuestion
+VALUES (10, 4, 6, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (11, 4, 9, 5, 1);
+
+INSERT INTO testQuestion
+VALUES (12, 4, 6, 8, 3);
+
+INSERT INTO testQuestion
+VALUES (13, 4, 9, 8, 1);
+
+INSERT INTO testQuestion
+VALUES (14, 4, 3, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (15, 4, 8, 8, 1);
+
+INSERT INTO testQuestion
+VALUES (16, 4, 9, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (17, 4, 7, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (18, 4, 6, 6, 3);
+
+INSERT INTO testQuestion
+VALUES (19, 4, 7, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (20, 4, 7, 7, 3);
+
+INSERT INTO testQuestion
+VALUES (21, 4, 9, 7, 1);
+
+INSERT INTO testQuestion
+VALUES (22, 4, 3, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (23, 4, 6, 7, 3);
+
+INSERT INTO testQuestion
+VALUES (24, 4, 7, 5, 1);
+
+INSERT INTO testQuestion
+VALUES (25, 4, 7, 8, 3);
+
+INSERT INTO testQuestion
+VALUES (26, 4, 6, 6, 1);
+
+INSERT INTO testQuestion
+VALUES (27, 4, 6, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (28, 4, 8, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (29, 4, 8, 7, 1);
+
+INSERT INTO testQuestion
+VALUES (30, 4, 6, 5, 1);
+
+INSERT INTO testQuestion
+VALUES (31, 4, 8, 5, 1);
+
+INSERT INTO testQuestion
+VALUES (32, 4, 9, 6, 1);
+
+INSERT INTO testQuestion
+VALUES (33, 4, 2, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (34, 4, 8, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (35, 4, 4, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (36, 4, 4, 4, 1);
+
+INSERT INTO testQuestion
+VALUES (37, 4, 7, 7, 1);
+
+INSERT INTO testQuestion
+VALUES (38, 4, 8, 3, 1);
+
+INSERT INTO testQuestion
+VALUES (39, 4, 5, 2, 1);
+
+INSERT INTO testQuestion
+VALUES (40, 4, 7, 6, 1);
+
+INSERT INTO testQuestion
+VALUES (41, 4, 9, 9, 1);
+
+INSERT INTO testQuestion
+VALUES (42, 4, 6, 3, 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

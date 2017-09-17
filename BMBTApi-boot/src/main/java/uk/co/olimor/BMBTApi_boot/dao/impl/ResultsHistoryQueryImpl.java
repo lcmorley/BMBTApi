@@ -47,7 +47,7 @@ public class ResultsHistoryQueryImpl extends AbstractQuery<TestResult> implement
 		try {
 			while (result.next()) 
 				results.add(new TestResult(result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4), 
-					 result.getFloat(5)));			
+					 result.getFloat(5), result.getString(6)));			
 		} catch (final SQLException e) {
 			log.error("An error occurred whilst attempting to build the results.", e);
 			throw e;			

@@ -156,7 +156,7 @@ public class BMBTControllerIntegrationTest {
 	public void testSubmitResult() {
 		log.traceEntry();
 
-		final TestResult result = new TestResult("1", 1, 5, 2, 10.5f);
+		final TestResult result = new TestResult("1", 1, 5, 2, 10.5f, "Training");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
@@ -174,7 +174,7 @@ public class BMBTControllerIntegrationTest {
 	public void testSubmitResult_Unknown_Test() {
 		log.traceEntry();
 
-		final TestResult result = new TestResult("1", 100, 5, 2, 10.5f);
+		final TestResult result = new TestResult("1", 100, 5, 2, 10.5f, "Full");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");

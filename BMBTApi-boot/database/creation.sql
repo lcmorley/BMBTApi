@@ -31,5 +31,6 @@ CREATE TABLE testResult (
     correctAnswers int,
     incorrectAnswers int,
     timeElapsed float,
-    testDate datetime
+    testDate datetime,
+    testType varchar(100)
 )

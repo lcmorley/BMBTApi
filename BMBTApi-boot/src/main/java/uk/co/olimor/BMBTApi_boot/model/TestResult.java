@@ -38,4 +38,9 @@ public class TestResult {
 	 */
 	private float elapsedTime;
 	
+	/**
+	 * Type of test (Training or Full).
+	 */
+	private String testType;
+	
 }

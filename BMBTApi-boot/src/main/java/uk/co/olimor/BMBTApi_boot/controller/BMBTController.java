@@ -86,7 +86,7 @@ public class BMBTController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "user/{id}", produces = "application/json")
+	@RequestMapping(method = RequestMethod.GET, value = "/user/{id}", produces = "application/json")
 	public ResponseEntity<ApiResponse> getUser(@PathVariable("id") final String id) {
 		log.entry(id);		
 		
@@ -106,7 +106,7 @@ public class BMBTController {
 	 * 
 	 * @return - the Users.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "usersByDeviceId/{id}", produces = "application/json")
+	@RequestMapping(method = RequestMethod.GET, value = "/usersByDeviceId/{id}", produces = "application/json")
 	public ResponseEntity<ApiResponse> getUsersByDeviceId(@PathVariable("id") final String id) {
 		log.entry(id);		
 		
@@ -121,7 +121,7 @@ public class BMBTController {
 	/**
 	 * @return - a list of all possible tests.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "tests", produces = "application/json")
+	@RequestMapping(method = RequestMethod.GET, value = "/tests", produces = "application/json")
 	public ResponseEntity<ApiResponse> getTests() {
 		log.traceEntry();
 		
@@ -141,7 +141,7 @@ public class BMBTController {
 	 * 
 	 * @return - success message on submission.
 	 */
-	@RequestMapping(value = "submitResult", method = RequestMethod.POST, consumes= "application/json")
+	@RequestMapping(value = "/submitResult", method = RequestMethod.POST, consumes= "application/json")
 	public ResponseEntity<ApiResponse> submitResult(@RequestBody final TestResult result) {
 		log.entry(result);
 		
