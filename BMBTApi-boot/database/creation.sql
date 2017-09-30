@@ -6,6 +6,7 @@ DROP TABLE operator;
 DROP TABLE device;
 DROP TABLE users;
 DROP TABLE test; 
+DROP TABLE deviceSecurity;
 
 CREATE TABLE device (
 	deviceId varchar(100) NOT NULL,
@@ -40,7 +41,7 @@ CREATE TABLE testQuestion (
     xValue int,
     yValue int,
     operatorId int,
-    PRIMARY KEY(id),
+    PRIMARY KEY(id, testId),
     FOREIGN KEY(testId) REFERENCES test(id),
     FOREIGN KEY(operatorId) REFERENCES operator(id)
 );
