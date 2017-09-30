@@ -11,7 +11,7 @@ import uk.co.olimor.BMBTApi_boot.model.User;
 
 @Log4j2
 @Service
-public class NewUserInsertImpl extends AbstractInsert<User> implements NewUserInsert {
+public class NewUserInsertImpl extends AbstractUpdate<User> implements NewUserInsert {
 
 	/**
 	 * Insert statement with placeholders.
@@ -25,13 +25,13 @@ public class NewUserInsertImpl extends AbstractInsert<User> implements NewUserIn
 		final String userId = UUID.randomUUID().toString();
 		final User user = new User(userId, deviceId, userName);
 		
-		insert(user);
+		update(user);
 
 		return log.traceExit(userId);
 	}
 
 	@Override
-	protected String buildInsert(User user) {
+	protected String buildUpdate(User user) {
 		log.entry(user);
 		return log.traceExit(String.format(INSERT_STATEMENT, user.getId(), user.getDeviceId(), user.getFirstName()));
 	}

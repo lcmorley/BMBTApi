@@ -1,324 +1,366 @@
 package uk.co.olimor.BMBTApi_boot.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Base64;
 
-import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.Application;
-import uk.co.olimor.BMBTApi_boot.JsonDeserialiser;
-import uk.co.olimor.BMBTApi_boot.model.Question;
-import uk.co.olimor.BMBTApi_boot.model.TestAnalysis;
+import uk.co.olimor.BMBTApi_boot.common.Constants;
+import uk.co.olimor.BMBTApi_boot.model.LoginCredentials;
 import uk.co.olimor.BMBTApi_boot.model.TestResult;
-import uk.co.olimor.BMBTApi_boot.model.User;
 import uk.co.olimor.BMBTApi_boot.requestmodel.CreateUserRequest;
 import uk.co.olimor.BMBTApi_boot.response.ApiResponse;
 
-/**
- * This test client was written to provide an integration test for the deployed
- * receipt service.
- * 
- * @author morlel
- *
- */
 @Log4j2
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BMBTControllerIntegrationTest {
+public class BMBTControllerIntegrationTest extends AbstractBMBTControllerIntegrationTest {
 
-	/**
-	 * The local server port to use in the test.
-	 */
-	@LocalServerPort
-	private int port;
-
-	/**
-	 * {@link TestRestTemplate} instance.
-	 */
-	final TestRestTemplate restTemplate = new TestRestTemplate();
-
-	/**
-	 * Instance of the {@link JsonDeserialiser}.
-	 */
-	final JsonDeserialiser deserialiser = new JsonDeserialiser();
-	
-	/**
-	 * Test happy path (/user/1).
-	 * 
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
 	@Test
-	public void test_User_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
-		log.traceEntry();
-		ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/user/1"),
-				ApiResponse.class);
-		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		final User responseUser = deserialiser.deserialiseToUser(getObjectMapFromResponse(response));
-		final User expectedUser = new User("1", "deviceId1", "Oliver AWS");
-
-		Assert.assertEquals(expectedUser, responseUser);
-
-		log.traceExit();
-	}
-
-	/**
-	 * Test unknown user (/user/100).
-	 * 
-	 * @throws JSONException
-	 */
-	@Test
-	public void test_User_Unknown() throws JSONException {
-		log.traceEntry();
-		ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/user/100"),
-				ApiResponse.class);
-
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-		log.traceExit();
-	}
-
-	/**
-	 * Test the endpoint /usersByDeviceId.
-	 * 
-	 * @throws JSONException
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test_UsersByDeviceId_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
-		log.traceEntry();
-		final ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/usersByDeviceId/deviceId1"),
-				ApiResponse.class);
-		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		final List<User> responseUser = deserialiser.deserialiseToUsers((List<User>) response.getBody().getObject());
-		final User expectedUser = new User("1", "deviceId1", "Oliver AWS");
-
-		Assert.assertEquals(expectedUser, responseUser.get(0));
-
-		log.traceExit();
+	public void test_User_Journey_Happy() throws Exception {
+		registerDevice();
+		login();
+		createUser();
+		getUser();
+		getUsersByDeviceId();
+		getTests();
+		submitResult();
+		getResultsAnalysis();
 	}
 	
-	/**
-	 * Test happy path (/user/1).
-	 * 
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
-	@SuppressWarnings("unchecked")
 	@Test
-	public void test_Tests_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
-		log.traceEntry();
-		ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/tests"),
-				ApiResponse.class);
-
-		final Question question = new Question(4, 4, "+");
-		final List<Question> questions = new ArrayList<>();
-		questions.add(question);
-
-		final uk.co.olimor.BMBTApi_boot.model.Test expected = new uk.co.olimor.BMBTApi_boot.model.Test(1, "Reception",
-				20, questions);
-
-		List<uk.co.olimor.BMBTApi_boot.model.Test> tests = deserialiser.deserialiseJsonToTests(
-				(List<uk.co.olimor.BMBTApi_boot.model.Test>) response.getBody().getObject());
-
-		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(1, tests.size());
-		Assert.assertEquals(expected, tests.get(0));
-
-		log.traceExit();
-	}
-
-	@Test
-	public void testSubmitResult() {
+	public void test_RegisterAttempt_Missing_Device_Id_In_Header_Info_Forbidden() throws Exception {
 		log.traceEntry();
 
-		final TestResult result = new TestResult("1", 1, 5, 2, 10.5f, "Full");
+		final LoginCredentials login = new LoginCredentials();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, headers);
-
-		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-				entity, ApiResponse.class);
-
-		Assert.assertEquals("Test Result submitted successfully", response.getBody().getConfirmationMessage());
-
-		log.traceExit();
-	}
-
-	@Test
-	public void testSubmitResult_Unknown_Test() {
-		log.traceEntry();
-
-		final TestResult result = new TestResult("1", 100, 5, 2, 10.5f, "Full");
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("content-type", "application/json");
-		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, headers);
-
-		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-				entity, ApiResponse.class);
-
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-		log.traceExit();
-	}
-
-	/**
-	 * Test test results analysis happy path (/resultHistory/1).
-	 * 
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test_ResultAnalysis_Happy()
-			throws JSONException, JsonParseException, JsonMappingException, IOException {
-		log.traceEntry();
-
-		final ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/resultsAnalysis/1"),
-				ApiResponse.class);
-
-		final List<TestAnalysis> expected = new ArrayList<>();
-
-		TestAnalysis analysis = new TestAnalysis(1);
-		analysis.setTotalTests(1);
-		analysis.setAverageAttemptedQuestions(7);
-		analysis.setAverageCorrectAnswers(5);
-		analysis.setTopCorrectAnswers(5);
-		analysis.setAverageTime(10.5f);
-		analysis.setBestTime(10.5f);
-
-		expected.add(analysis);
+		headers.set(Constants.NEW_DEVICE, Base64.getEncoder().encodeToString("NEW_DEVICE".getBytes()));
 		
-		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(expected, deserialiser.deserialiseToTestAnalysisList((List<TestAnalysis>) 
-				response.getBody().getObject()));
+		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/registerDevice"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
 		log.traceExit();
 	}
 
-	/**
-	 * Test test results analysis happy path (/resultHistory/1).
-	 * 
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
 	@Test
-	public void test_ResultAnalysis_Unknown_User()
-			throws JSONException, JsonParseException, JsonMappingException, IOException {
+	public void test_RegisterAttempt_Incorrect_Key_Device_Id_In_Header_Info_Forbidden() throws Exception {
 		log.traceEntry();
 
-		final ResponseEntity<ApiResponse> response = restTemplate
-				.getForEntity(createURLWithPort("/resultsAnalysis/100"), ApiResponse.class);
+		final LoginCredentials login = new LoginCredentials();
 
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		headers.set(Constants.NEW_DEVICE, Base64.getEncoder().encodeToString("INCORRECT_KEY.1".getBytes()));
+		
+		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/registerDevice"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
 		log.traceExit();
 	}
 
-	/**
-	 * Test test results analysis happy path (/resultHistory/1).
-	 * 
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
 	@Test
-	public void test_ResultAnalysis_Null_User()
-			throws JSONException, JsonParseException, JsonMappingException, IOException {
+	public void test_RegisterAttempt_Missing_Header_Forbidden() throws Exception {
 		log.traceEntry();
 
-		final ResponseEntity<ApiResponse> response = restTemplate.getForEntity(createURLWithPort("/resultsAnalysis/"),
+		final LoginCredentials login = new LoginCredentials();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		
+		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/registerDevice"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+		log.traceExit();
+	}
+	
+	@Test
+	public void test_LoginWithUnregisteredDevice_Unauthorised() throws Exception {
+		log.traceEntry();
+
+		final LoginCredentials login = new LoginCredentials();
+
+		login.setDeviceId("1");
+		login.setPassword("testPassword");
+		login.setUserId("testUser");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		
+		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/login"), entity,
 				ApiResponse.class);
 
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
 
 		log.traceExit();
 	}
 
-	/**
-	 * Test test results analysis happy path (/resultHistory/1).
-	 *
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
 	@Test
-	public void test_CreateUser_Happy() throws JSONException, JsonParseException, JsonMappingException, IOException {
+	public void test_LoginWithRegisteredDevice_Invalid_Creds_Unauthorised() throws Exception {
 		log.traceEntry();
 
+		registerDevice();
+		
+		final LoginCredentials login = new LoginCredentials();
+
+		login.setDeviceId("1");
+		login.setPassword("testPaword");
+		login.setUserId("testUser");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("content-type", "application/json");
+		
+		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/login"), entity,
+				ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
+
+		log.traceExit();
+	}
+	
+	@Test
+	public void test_CreateUser_Null_DeviceId() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		
 		final CreateUserRequest user = new CreateUserRequest();
-		
-		user.setUserName("TestName");
-		user.setDeviceId("deviceId");
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("content-type", "application/json");
-		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, headers);
+		user.setUserName("TestName");
+
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
 
 		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
 				entity, ApiResponse.class);
 
-		final String userId = (String) response.getBody().getObject();
-
-		Assert.assertFalse(userId.isEmpty());
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
 
 		log.traceExit();
-	 }
+	}
 
-	/**
-	 * Create URL with port.
-	 * 
-	 * @param uri
-	 *            - the endpoint to call.
-	 * 
-	 * @return - the full uri to call.
-	 */
-	private String createURLWithPort(String uri) {
+	@Test
+	public void test_CreateUser_Invalid_DeviceId() throws Exception {
 		log.traceEntry();
-		return log.traceExit("http://localhost:" + port + uri);
+
+		registerDevice();
+		login();
+		
+		final CreateUserRequest user = new CreateUserRequest();
+
+		user.setUserName("TestName");
+		user.setDeviceId("INVALID");
+
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
+
+		log.traceExit();
+	}
+
+	@Test
+	public void test_CreateUser_Null_UserName() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		
+		final CreateUserRequest user = new CreateUserRequest();
+
+		user.setDeviceId("INVALID");
+
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
+
+		log.traceExit();
+	}
+
+	@Test
+	public void test_CreateUser_Empty_UserName() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		
+		final CreateUserRequest user = new CreateUserRequest();
+
+		user.setDeviceId("INVALID");
+		user.setUserName("");
+
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		Assert.assertNull(response.getBody().getObject());
+
+		log.traceExit();
 	}
 	
-	/**
-	 * @param response - the response from the call to the API.
-	 * 
-	 * @return - the response Object as the Map<String, String> representation.
-	 */
-	@SuppressWarnings("unchecked")
-	private Map<String, String> getObjectMapFromResponse(final ResponseEntity<ApiResponse> response) {
+	@Test
+	public void test_GetUser_UnknownUser() throws Exception {
 		log.traceEntry();
-		return log.traceExit((Map<String, String>) response.getBody().getObject());
+		
+		registerDevice();
+		login();
+		createUser();
+		
+		HttpEntity entity = new HttpEntity(buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.exchange(createURLWithPort("/user/unknown"),
+				HttpMethod.GET, entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	}
+	
+	@Test
+	public void test_GetUsersByDeviceId_UnknownDevice() throws Exception {
+		log.traceEntry();
+		
+		registerDevice();
+		login();
+		createUser();
+		
+		HttpEntity entity = new HttpEntity(buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.exchange(createURLWithPort("/usersByDeviceId/unknown"),
+				HttpMethod.GET, entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	}
+	
+	@Test
+	public void submitResult_unknown_user() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		createUser();
+		
+		final TestResult result = new TestResult("unknown", 1, 5, 2, 10.5f, "Full");
+
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		
+		log.traceExit();
+	}
+
+	@Test
+	public void submitResult_null_user() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		createUser();
+		
+		final TestResult result = new TestResult(null, 1, 5, 2, 10.5f, "Full");
+
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		
+		log.traceExit();
+	}
+
+	@Test
+	public void submitResult_empty_user() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		createUser();
+		
+		final TestResult result = new TestResult(Constants.EMPTY_STRING, 1, 5, 2, 10.5f, "Full");
+
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		
+		log.traceExit();
+	}
+	
+	@Test
+	public void submitResult_unknown_test() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		createUser();
+		
+		final TestResult result = new TestResult(currentUser, 30, 5, 2, 10.5f, "Full");
+
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		
+		log.traceExit();
+	}
+
+	@Test
+	public void submitResult_empty_test() throws Exception {
+		log.traceEntry();
+
+		registerDevice();
+		login();
+		createUser();
+		
+		final TestResult result = new TestResult(currentUser, 0, 5, 2, 10.5f, "Full");
+
+		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
+				entity, ApiResponse.class);
+
+		Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		
+		log.traceExit();
 	}
 
 }

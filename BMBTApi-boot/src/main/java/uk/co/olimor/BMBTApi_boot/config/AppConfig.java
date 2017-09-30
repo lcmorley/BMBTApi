@@ -1,10 +1,12 @@
 package uk.co.olimor.BMBTApi_boot.config;
 
-import javax.activation.DataSource;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -50,7 +52,7 @@ public class AppConfig {
 	 * @return the datasource.
 	 */
 	@Bean
-	public MysqlDataSource getDataSource() {
+	public DataSource getDataSource() {
 		log.traceEntry();
 		
 		log.info("Connecting to DB: " + connectionString + ", Schema: " + schema 

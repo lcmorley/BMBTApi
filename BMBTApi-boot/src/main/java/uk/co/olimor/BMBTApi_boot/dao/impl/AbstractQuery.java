@@ -7,10 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_boot.dao.AbstractDAO;
@@ -29,7 +29,7 @@ public abstract class AbstractQuery<T> extends AbstractDAO {
 	 * Datasource object.
 	 */
 	@Autowired
-	protected MysqlDataSource datasource;
+	protected DataSource datasource;
 	
 	/**
 	 * Run query and return T as a result.
@@ -51,7 +51,7 @@ public abstract class AbstractQuery<T> extends AbstractDAO {
 
 			result = stmt.executeQuery(query);
 			return log.traceExit(buildResult(result));		
-		} catch (final SQLException e) {
+		} catch (final Exception e) {
 			logError(log, "An error occurred whilst attempting to run the query: " + query, e, 
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		} finally {
@@ -78,6 +78,6 @@ public abstract class AbstractQuery<T> extends AbstractDAO {
 	 * 
 	 * @return results converted to a {@link List} of T.
 	 */
-	protected abstract List<T> buildResult(final ResultSet result) throws SQLException;
+	protected abstract List<T> buildResult(final ResultSet result) throws Exception;
 
 }

@@ -1,5 +1,7 @@
 package uk.co.olimor.BMBTApi_boot.requestmodel;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 
 /**

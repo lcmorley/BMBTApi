@@ -2,6 +2,7 @@ package uk.co.olimor.BMBTApi_boot.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,12 @@ import uk.co.olimor.BMBTApi_boot.model.TestResult;
  */
 @Service
 @Log4j2
-public class TestResultInsertImpl extends AbstractInsert<TestResult>implements TestResultInsert {
+public class TestResultInsertImpl extends AbstractUpdate<TestResult>implements TestResultInsert {
 
 	/**
 	 * Insert statement with placeholders.
 	 */
-	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES ('%s', %d, %d, %d, %f, '%s', '%s')";	
+	private static final String INSERT_STATEMENT = "INSERT INTO testResult VALUES ('%s', '%s', %d, %d, %d, %f, '%s', '%s')";	
 	
 	/**
 	 * Save the {@link TestResult} object to the database.
@@ -33,20 +34,22 @@ public class TestResultInsertImpl extends AbstractInsert<TestResult>implements T
 	@Override
 	public void saveTestResult(final TestResult result) throws ApiException {
 		log.entry(result);
-		insert(result);
+		update(result);
 		log.traceExit();
 	}
 
 	/**
 	 * Method to build the insert method given a {@link TestResult}.
 	 */
-	protected String buildInsert(final TestResult result) {
+	protected String buildUpdate(final TestResult result) {
 		log.entry(result);
 		
 		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
 		final String currentTime = format.format(new Date());
 		
-		return log.traceExit(String.format(INSERT_STATEMENT, result.getUserId(), result.getTestId(), 
+		final String testResultId = UUID.randomUUID().toString();
+		
+		return log.traceExit(String.format(INSERT_STATEMENT, testResultId, result.getUserId(), result.getTestId(), 
 				result.getCorrectAnswers(), result.getIncorrectAnswers(), result.getElapsedTime(), currentTime, 
 				result.getTestType()));
 	}
