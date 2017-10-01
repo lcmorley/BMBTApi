@@ -3,6 +3,7 @@ package uk.co.olimor.BMBTApi_boot.security;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,12 +11,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import lombok.extern.log4j.Log4j2;
@@ -63,13 +61,22 @@ public class AuthenticationFilter extends GenericFilterBean {
 		
 		Authentication authenticated;
 		
+		Enumeration<String> headers = ((HttpServletRequest) request).getHeaderNames();
+		
+		while (headers.hasMoreElements()) {
+			System.out.println(headers.nextElement());
+		}
+		
 		final String newDevice = ((HttpServletRequest) request).getHeader(NEW_DEVICE);	
 		
 		if (newDevice != null) {
+			log.debug("Device id found: " + newDevice);
 			processNewDevice(newDevice, request, response, chain);
 			log.traceExit();
 			return;
-		}
+		} 
+		
+		log.debug("No device id found.");
 		
 		final String token = ((HttpServletRequest) request).getHeader(JWT_TOKEN);
 		
