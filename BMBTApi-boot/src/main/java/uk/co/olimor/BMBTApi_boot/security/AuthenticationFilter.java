@@ -61,12 +61,6 @@ public class AuthenticationFilter extends GenericFilterBean {
 		
 		Authentication authenticated;
 		
-		Enumeration<String> headers = ((HttpServletRequest) request).getHeaderNames();
-		
-		while (headers.hasMoreElements()) {
-			System.out.println(headers.nextElement());
-		}
-		
 		final String newDevice = ((HttpServletRequest) request).getHeader(NEW_DEVICE);	
 		
 		if (newDevice != null) {
