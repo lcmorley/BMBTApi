@@ -40,7 +40,7 @@ public class BMBTControllerIntegrationTest extends AbstractBMBTControllerIntegra
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.set(Constants.NEW_DEVICE, Base64.getEncoder().encodeToString("NEW_DEVICE".getBytes()));
+		headers.set(Constants.NEW_DEVICE_HEADER, Base64.getEncoder().encodeToString("NEW_DEVICE".getBytes()));
 		
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
@@ -60,7 +60,7 @@ public class BMBTControllerIntegrationTest extends AbstractBMBTControllerIntegra
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.set(Constants.NEW_DEVICE, Base64.getEncoder().encodeToString("INCORRECT_KEY.1".getBytes()));
+		headers.set(Constants.NEW_DEVICE_HEADER, Base64.getEncoder().encodeToString("INCORRECT_KEY.1".getBytes()));
 		
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 

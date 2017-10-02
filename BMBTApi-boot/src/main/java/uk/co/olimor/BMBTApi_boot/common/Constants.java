@@ -14,9 +14,14 @@ public final class Constants {
 	public static final String DEVICE = "device";
 	
 	/**
+	 * New device header.
+	 */
+	public static final String NEW_DEVICE_HEADER = "x-new-device";
+	
+	/**
 	 * Constant for NEW_DEVICE.
 	 */
-	public static final String NEW_DEVICE = "NEW_DEVICE";
+	public static final String NEW_DEVICE_VALUE = "NEW_DEVICE";
 	
 	/**
 	 * Constant for int 0.

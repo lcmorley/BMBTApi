@@ -121,7 +121,7 @@ public abstract class AbstractBMBTControllerIntegrationTest {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.set(Constants.NEW_DEVICE, Base64.getEncoder().encodeToString("NEW_DEVICE.1".getBytes()));
+		headers.set(Constants.NEW_DEVICE_HEADER, Base64.getEncoder().encodeToString("NEW_DEVICE.1".getBytes()));
 		
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
@@ -348,7 +348,7 @@ public abstract class AbstractBMBTControllerIntegrationTest {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.add("JWT_TOKEN", currentToken);
+		headers.add("x-jwt-token", currentToken);
 
 		return log.exit(headers);
 	}
@@ -363,7 +363,7 @@ public abstract class AbstractBMBTControllerIntegrationTest {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.add("JWT_TOKEN", "INVALID_JWT");
+		headers.add("x-jwt-token", "INVALID_JWT");
 
 		return log.exit(headers);
 	}
@@ -406,7 +406,7 @@ public abstract class AbstractBMBTControllerIntegrationTest {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
-		headers.add("JWT_TOKEN", util.generateJWTToken("unknown"));
+		headers.add("x-jwt-token", util.generateJWTToken("unknown"));
 		
 		HttpEntity entity = new HttpEntity(null, headers);
 

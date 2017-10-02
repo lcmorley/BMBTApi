@@ -35,12 +35,12 @@ public class AuthenticationFilter extends GenericFilterBean {
 	/**
 	 * JWT_TOKEN constant.
 	 */
-	private static final String JWT_TOKEN = "JWT_TOKEN";
+	private static final String JWT_TOKEN = "x-jwt-token";
 	
 	/**
 	 * Header constant to state this is a register.
 	 */
-	private static final String NEW_DEVICE = "NEW_DEVICE";
+	private static final String NEW_DEVICE = "x-new-device";
 
 	/**
 	 * Constructor.
@@ -120,7 +120,7 @@ public class AuthenticationFilter extends GenericFilterBean {
 		boolean deviceDecodedValid = false;
 		
 		if (deviceParts.length == 2) {
-			if (deviceParts[0].equals(Constants.NEW_DEVICE)) {
+			if (deviceParts[0].equals(Constants.NEW_DEVICE_VALUE)) {
 				final String deviceId = deviceParts[1];				
 				request.setAttribute(Constants.DEVICE, deviceId);				
 				SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
