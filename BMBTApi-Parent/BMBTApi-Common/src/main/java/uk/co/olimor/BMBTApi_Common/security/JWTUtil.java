@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -14,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 @Service
+@Data
 public final class JWTUtil {
 
 	/**

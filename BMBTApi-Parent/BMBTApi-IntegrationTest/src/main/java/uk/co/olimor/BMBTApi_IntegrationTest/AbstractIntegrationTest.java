@@ -14,14 +14,13 @@ import javax.sql.DataSource;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -49,7 +48,7 @@ public abstract class AbstractIntegrationTest {
 	/**
 	 * {@link TestRestTemplate} instance.
 	 */
-	final TestRestTemplate restTemplate = new TestRestTemplate();
+	final RestTemplate restTemplate = new RestTemplate();
 
 	/**
 	 * Instance of the {@link JsonDeserialiser}.
@@ -81,6 +80,16 @@ public abstract class AbstractIntegrationTest {
 	 */
 	protected DataSource datasource;
 
+	/**
+	 * Login username.
+	 */
+	protected String userName;
+	
+	/**
+	 * Login password.
+	 */
+	protected String password;
+	
 	@Before
 	public void init() throws Exception {
 		removeDevice();
@@ -135,8 +144,8 @@ public abstract class AbstractIntegrationTest {
 		final LoginCredentials login = new LoginCredentials();
 
 		login.setDeviceId("1");
-		login.setPassword("testPassword");
-		login.setUserId("testUser");
+		login.setPassword(password);
+		login.setUserId(userName);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("content-type", "application/json");
@@ -289,7 +298,7 @@ public abstract class AbstractIntegrationTest {
 
 		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
-		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("submitResult"),
+		final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
 				entity, ApiResponse.class);
 
 		assertValue(HttpStatus.OK, response.getStatusCode(), "submitResult");

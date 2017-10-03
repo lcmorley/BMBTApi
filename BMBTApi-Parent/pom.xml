@@ -13,8 +13,9 @@
 
 	<modules>
 		<module>BMBTApi-Common</module>
-		<module>BMBTApi-boot</module>
 		<module>BMBTApi-IntegrationTest</module>
+		<module>BMBTApi-boot</module>
+		<module>BMBT_Monitor_Lambda</module>
 	</modules>
 
 	<properties>
@@ -28,6 +29,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>1.5.6.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.amazonaws</groupId>
+				<artifactId>aws-java-sdk-bom</artifactId>
+				<version>1.11.206</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

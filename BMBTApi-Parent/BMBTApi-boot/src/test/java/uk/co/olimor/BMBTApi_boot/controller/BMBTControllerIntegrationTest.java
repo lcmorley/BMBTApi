@@ -42,7 +42,8 @@ public class BMBTControllerIntegrationTest {
 	@Test
 	public void runTest() {
 		log.traceEntry();
-		Assert.assertTrue(new BMBTApiIntegrationTest().runTest("http://localhost:" + port, datasource, util));
+		Assert.assertTrue(new BMBTApiIntegrationTest().runTest("http://localhost:" + port, datasource, util, null, 
+				"testUser", "testPassword"));
 		log.traceExit();
 	}
 	
