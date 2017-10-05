@@ -2,14 +2,11 @@ package uk.co.olimor.bmbt_monitor_lambda;
 
 import javax.sql.DataSource;
 
-import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import uk.co.olimor.BMBTApi_Common.security.JWTUtil;
@@ -23,8 +20,6 @@ public class LambdaFunctionHandler implements RequestHandler<MonitorInput, Strin
 
 		if (monitorInput == null)
 			return "Failed";
-
-		final ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			final JWTUtil util = new JWTUtil();
