@@ -28,42 +28,29 @@ public abstract class AbstractUpdate<T> extends AbstractDAO {
 	 */
 	@Autowired
 	protected DataSource datasource;
-		
+
 	/**
 	 * 
 	 * @param objectToUpdate
-	 * @throws ApiException 
+	 * @throws ApiException
 	 */
 	public int update(final T objectToUpdate) throws ApiException {
 		log.entry(objectToUpdate);
-		
-		Connection conn = null;
-		Statement stmt = null;
-		
-		try {
-			conn = datasource.getConnection();
-			stmt = conn.createStatement();
-			
+
+		try (final Connection conn = datasource.getConnection(); 
+				final Statement stmt = conn.createStatement();) {
+
 			final int result = stmt.executeUpdate(buildUpdate(objectToUpdate));
-			
+
 			if (result == 0)
-				logError(log, "The object was not updated on the db. Value: " + objectToUpdate, null, 
+				logError(log, "The object was not updated on the db. Value: " + objectToUpdate, null,
 						HttpStatus.INTERNAL_SERVER_ERROR);
-			
-			return log.traceExit(result);	
+
+			return log.traceExit(result);
 		} catch (final SQLException e) {
-			logError(log, "An error occurred whilst attempting to update on the database with object: " 
-				+ objectToUpdate, e, HttpStatus.INTERNAL_SERVER_ERROR);
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-				if (stmt != null)
-					stmt.close();
-			} catch (final SQLException e) {
-				log.error("An error occurred whilst attempting to update on the database with object: " 
-					+ objectToUpdate, e);
-			}
+			logError(log,
+					"An error occurred whilst attempting to update on the database with object: " + objectToUpdate, e,
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return log.traceExit(Constants.INT_ZERO);
@@ -72,7 +59,8 @@ public abstract class AbstractUpdate<T> extends AbstractDAO {
 	/**
 	 * Given an object of T, build and return the update string.
 	 * 
-	 * @param objectToUpdate - the object to update into the db.
+	 * @param objectToUpdate
+	 *            - the object to update into the db.
 	 * 
 	 * @return - the number of results inserted.
 	 */

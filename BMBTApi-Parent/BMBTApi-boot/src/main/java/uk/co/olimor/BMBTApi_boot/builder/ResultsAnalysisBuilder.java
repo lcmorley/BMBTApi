@@ -89,7 +89,7 @@ public final class ResultsAnalysisBuilder {
 			
 			totals.addTotalTime(result.getElapsedTime());
 			
-			if (totals.getBestTime() < result.getElapsedTime())
+			if (totals.getBestTime() == 0.0f || totals.getBestTime() > result.getElapsedTime())
 				totals.setBestTime(result.getElapsedTime());
 			
 			if (totals.getTopCorrectAnswers() < result.getCorrectAnswers()) 
