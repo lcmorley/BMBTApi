@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -58,18 +57,30 @@ public class AuthenticationFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		log.traceEntry();
 		
-		Authentication authenticated;
-		
 		final String newDevice = ((HttpServletRequest) request).getHeader(NEW_DEVICE);	
 		
-		if (newDevice != null) {
-			log.debug("Device id found: " + newDevice);
+		if (newDevice != null) 
 			processNewDevice(newDevice, request, response, chain);
-			log.traceExit();
-			return;
-		} 
+		else 		
+			processJWTToken(request, response, chain);
 		
-		log.debug("No device id found.");
+		chain.doFilter(request, response);
+		
+		log.traceExit();
+	}
+
+	/**
+	 * Attempt to authenticate to the API using the provided token.
+	 * 
+	 * @param request - the incoming request.
+	 * @param response - the incoming response.
+	 * @param chain - the filter chain.
+	 * 
+	 * @throws IOException - the exception thrown.
+	 * @throws ServletException - the servlet exception thrown.
+	 */
+	private void processJWTToken(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
+		log.entry(request, response, chain);
 		
 		final String token = ((HttpServletRequest) request).getHeader(JWT_TOKEN);
 		
@@ -77,19 +88,12 @@ public class AuthenticationFilter extends GenericFilterBean {
 		
 		if (token != null && !token.isEmpty()) {
 			try {
-				authenticated = securityUtil.authenticate(token);
+				SecurityContextHolder.getContext().setAuthentication(securityUtil.authenticate(token));
 			} catch (final SecurityException e) {
-				log.error("Authentication failed");
-				authenticated = null;
-			}
-		} else {
-			authenticated = null;
+				log.error("Authentication failed");				
+			}		
 		}
 			
-		SecurityContextHolder.getContext().setAuthentication(authenticated);
-		
-		chain.doFilter(request, response);
-		
 		log.traceExit();
 	}
 
@@ -124,8 +128,6 @@ public class AuthenticationFilter extends GenericFilterBean {
 		
 		if (!deviceDecodedValid)
 			log.error("Invalid device information found on request.");
-		
-		chain.doFilter(request, response);
 		
 		log.traceExit();
 	}

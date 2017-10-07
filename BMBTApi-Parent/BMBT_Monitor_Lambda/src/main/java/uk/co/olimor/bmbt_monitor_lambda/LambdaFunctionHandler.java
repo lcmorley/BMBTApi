@@ -46,7 +46,7 @@ public class LambdaFunctionHandler implements RequestHandler<MonitorInput, Strin
 				if (result) 
 					return PASSED;			
 			} catch (final Exception e) {
-				context.getLogger().log("An exception occurred whilst attempting to convert Json to Object." 
+				context.getLogger().log("An exception occurred whilst running the integration test." 
 						+ monitorInput + ":" + e.getMessage());
 			}
 		}

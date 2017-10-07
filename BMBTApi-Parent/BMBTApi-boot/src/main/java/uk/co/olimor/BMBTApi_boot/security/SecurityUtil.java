@@ -47,16 +47,28 @@ public class SecurityUtil {
 		
 		final String deviceId = jwtUtil.getSubjectFromToken(token);
 		
-		DatabaseToken dbToken = null;		
-		
 		try {
-			dbToken = tokenCheck.getTokenFromDeviceId(deviceId);
+			validateToken(token, tokenCheck.getTokenFromDeviceId(deviceId));
 		} catch (final ApiException e) {
 			log.error("Problem occurred whilst attempting to retrieve the token from the db.", e);
 			throw new SecurityException();
 		}
 		
-		log.debug("Token returned: " + dbToken);
+		log.info("Device: " + deviceId + " successfully authenticated.");
+		
+		return new UsernamePasswordAuthenticationToken(deviceId, null, Collections.emptyList());
+	}
+
+	/**
+	 * Validate the DB Token that is returned against the token from the request.
+	 * 
+	 * @param token - the incoming token.
+	 * @param dbToken - the token from the database.
+	 * 
+	 * @throws SecurityException - Exception thrown when the check fails.
+	 */
+	private void validateToken(final String token, final DatabaseToken dbToken) throws SecurityException {
+		log.traceEntry(token, dbToken);
 		
 		if (!dbToken.getToken().equals(token)) {
 			log.error("Token does not match that found on the DB.");
@@ -74,9 +86,7 @@ public class SecurityUtil {
 			throw new SecurityException();
 		}
 		
-		log.info("Device: " + deviceId + " successfully authenticated.");
-		
-		return new UsernamePasswordAuthenticationToken(deviceId, null, Collections.emptyList());
+		log.traceExit();
 	}
 	
 }
