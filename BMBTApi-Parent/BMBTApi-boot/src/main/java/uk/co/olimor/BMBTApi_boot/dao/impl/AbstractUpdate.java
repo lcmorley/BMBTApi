@@ -34,26 +34,20 @@ public abstract class AbstractUpdate<T> extends AbstractDAO {
 	 * @param objectToUpdate
 	 * @throws ApiException
 	 */
-	public int update(final T objectToUpdate) throws ApiException {
+	public void update(final T objectToUpdate) throws ApiException {
 		log.entry(objectToUpdate);
 
-		try (final Connection conn = datasource.getConnection(); 
-				final Statement stmt = conn.createStatement();) {
-
-			final int result = stmt.executeUpdate(buildUpdate(objectToUpdate));
-
-			if (result == 0)
+		try (final Connection conn = datasource.getConnection(); final Statement stmt = conn.createStatement();) {
+			if (stmt.executeUpdate(buildUpdate(objectToUpdate)) == Constants.INT_ZERO)
 				logError(log, "The object was not updated on the db. Value: " + objectToUpdate, null,
 						HttpStatus.INTERNAL_SERVER_ERROR);
-
-			return log.traceExit(result);
 		} catch (final SQLException e) {
 			logError(log,
 					"An error occurred whilst attempting to update on the database with object: " + objectToUpdate, e,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return log.traceExit(Constants.INT_ZERO);
+		log.traceExit();
 	}
 
 	/**

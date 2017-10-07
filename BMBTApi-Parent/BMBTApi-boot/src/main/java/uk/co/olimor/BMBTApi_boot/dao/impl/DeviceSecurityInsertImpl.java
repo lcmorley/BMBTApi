@@ -20,9 +20,10 @@ public class DeviceSecurityInsertImpl extends AbstractUpdate<String> implements 
 	private static final String INSERT_STATEMENT = "INSERT INTO deviceSecurity VALUES ('%s','%s','%s')";
 	
 	@Override
-	public int insertIntoDeviceSecurity(final String deviceId) throws ApiException {
+	public void insertIntoDeviceSecurity(final String deviceId) throws ApiException {
 		log.traceEntry(deviceId);
-		return log.traceExit(update(deviceId));
+		update(deviceId);
+		log.traceExit();
 	}
 
 	@Override

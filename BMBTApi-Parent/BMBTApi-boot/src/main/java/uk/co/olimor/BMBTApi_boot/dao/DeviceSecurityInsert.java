@@ -15,6 +15,6 @@ public interface DeviceSecurityInsert {
 	 * 
 	 * @param deviceId - the deviceId to insert.
 	 */
-	int insertIntoDeviceSecurity(final String deviceId) throws ApiException;
+	void insertIntoDeviceSecurity(final String deviceId) throws ApiException;
 	
 }

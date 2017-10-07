@@ -42,8 +42,8 @@ public abstract class AbstractQuery<T> extends AbstractDAO {
 		log.entry(query);
 
 		try (final Connection conn = datasource.getConnection();
-				final Statement stmt = conn.createStatement();
-				final ResultSet result = stmt.executeQuery(query)) {
+			final Statement stmt = conn.createStatement();
+			final ResultSet result = stmt.executeQuery(query)) {
 			return log.traceExit(buildResult(result));
 		} catch (final Exception e) {
 			logError(log, "An error occurred whilst attempting to run the query: " + query, e,

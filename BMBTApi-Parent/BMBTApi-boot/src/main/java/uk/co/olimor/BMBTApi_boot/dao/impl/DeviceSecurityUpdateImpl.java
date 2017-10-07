@@ -2,14 +2,13 @@ package uk.co.olimor.BMBTApi_boot.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.DeviceSecurityUpdate;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.DatabaseToken;
+import uk.co.olimor.BMBTApi_boot.dao.DeviceSecurityUpdate;
 
 @Log4j2
 @Service
@@ -20,9 +19,10 @@ public class DeviceSecurityUpdateImpl extends AbstractUpdate<DatabaseToken>
 			+ "WHERE deviceId = '%s'";
 	
 	@Override
-	public int updateDeviceSecurity(final DatabaseToken token) throws ApiException {
+	public void updateDeviceSecurity(final DatabaseToken token) throws ApiException {
 		log.entry(token);
-		return log.traceExit(update(token));
+		update(token);
+		log.traceExit();
 	}
 
 	@Override

@@ -230,7 +230,7 @@ public class BMBTController {
 			throw new ApiException("User not found.", HttpStatus.NOT_FOUND);
 		}
 		
-		if (testId == 0) {
+		if (testId == Constants.INT_ZERO) {
 			log.error("Test ID must be on the request.");
 			throw new ApiException("Test ID must be on the request.", HttpStatus.BAD_REQUEST);
 		}
@@ -281,7 +281,6 @@ public class BMBTController {
 		} catch (final ApiException e) {
 			return log.traceExit(buildErrorResponse(e));
 		}
-		
 	}
 
 	/**
@@ -358,14 +357,10 @@ public class BMBTController {
 			if (deviceExists.deviceExists(deviceId)) 
 				return log.traceExit(buildErrorResponse(new ApiException("Device already exists.", 
 						HttpStatus.BAD_REQUEST)));
-
-			if (deviceInsert.insertDevice(deviceId) == Constants.INT_ZERO) 
-				return log.traceExit(buildErrorResponse(new ApiException("Unable to register the device.", 
-						HttpStatus.INTERNAL_SERVER_ERROR)));
 			
-			if (deviceSecurityInsert.insertIntoDeviceSecurity(deviceId) == Constants.INT_ZERO) 
-				return log.traceExit(buildErrorResponse(new ApiException("Unable to create device security record.", 
-						HttpStatus.INTERNAL_SERVER_ERROR)));
+			deviceInsert.insertDevice(deviceId);
+			
+			deviceSecurityInsert.insertIntoDeviceSecurity(deviceId);
 		} catch (final ApiException e) {
 			return log.traceExit(buildErrorResponse(e));
 		}
@@ -406,9 +401,7 @@ public class BMBTController {
 			dbToken.setDeviceId(deviceId);
 			dbToken.setToken(token);
 	
-			if (deviceSecurityUpdate.updateDeviceSecurity(dbToken) == Constants.INT_ZERO) 
-				return log.traceExit(buildErrorResponse(new ApiException("Unable to update device security record.", 
-						HttpStatus.INTERNAL_SERVER_ERROR)));
+			deviceSecurityUpdate.updateDeviceSecurity(dbToken);
 			
 			final ApiResponse response = new ApiResponse();
 			response.setObject(new SuccessLoginResponse(token));

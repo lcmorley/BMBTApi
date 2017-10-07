@@ -19,9 +19,10 @@ public class DeviceInsertImpl extends AbstractUpdate<String> implements DeviceIn
 	private static final String INSERT_STATEMENT = "INSERT INTO device VALUES ('%s', '%s')";
 
 	@Override
-	public int insertDevice(final String deviceId) throws ApiException {
-		log.entry(deviceId);		
-		return log.traceExit(update(deviceId));
+	public void insertDevice(final String deviceId) throws ApiException {
+		log.entry(deviceId);	
+		update(deviceId);
+		log.traceExit();
 	}
 
 	@Override

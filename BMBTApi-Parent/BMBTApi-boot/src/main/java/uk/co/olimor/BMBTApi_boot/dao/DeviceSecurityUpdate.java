@@ -15,9 +15,7 @@ public interface DeviceSecurityUpdate {
 	 * Method which updates the securityToken table.
 	 * 
 	 * @param token - the token to update.
-	 * 
-	 * @return - the number of rows updated.
 	 */
-	int updateDeviceSecurity(final DatabaseToken token) throws ApiException;
+	void updateDeviceSecurity(final DatabaseToken token) throws ApiException;
 	
 }

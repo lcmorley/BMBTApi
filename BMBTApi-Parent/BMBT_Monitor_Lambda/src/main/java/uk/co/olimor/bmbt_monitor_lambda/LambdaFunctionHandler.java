@@ -12,38 +12,59 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import uk.co.olimor.BMBTApi_Common.security.JWTUtil;
 import uk.co.olimor.BMBTApi_IntegrationTest.BMBTApiIntegrationTest;
 
+/**
+ * Handler for the Lambda function.
+ * 
+ * @author leonmorley
+ *
+ */
 public class LambdaFunctionHandler implements RequestHandler<MonitorInput, String> {
 
+	/**
+	 * Failed string.
+	 */
+	private static final String FAILED = "Failed";
+	
+	/**
+	 * Passed string.
+	 */
+	private static final String PASSED = "Passed";
+	
 	@Override
-	public String handleRequest(MonitorInput monitorInput, Context context) {
+	public String handleRequest(final MonitorInput monitorInput, final Context context) {
 		context.getLogger().log("Input: " + monitorInput);
 
-		if (monitorInput == null)
-			return "Failed";
-
-		try {
-			final JWTUtil util = new JWTUtil();
-			util.setSecret(monitorInput.getSecret());
-
-			final boolean result = new BMBTApiIntegrationTest().runTest(monitorInput.getContextRoot(), getDataSource(monitorInput, context),
-					util, context.getLogger(), monitorInput.getAppUserName(), monitorInput.getAppPassword());
-			
-			if (!result) {
-				//create a new SNS client and set endpoint
-				AmazonSNS snsClient = AmazonSNSClient.builder().withRegion(Regions.US_EAST_1).build();			
-				snsClient.publish("arn:aws:sns:us-east-1:981596309454:BMBTMonitorState", "BMBT Monitor failed.");
-			} 
-			
-			return result ? "Passed" : "Failed";
-
-		} catch (final Exception e) {
-			context.getLogger().log("An exception occurred whilst attempting to convert Json to Object." 
-					+ monitorInput + ":" + e.getMessage());
+		if (monitorInput != null) {
+			try {
+				final JWTUtil util = new JWTUtil();
+				util.setSecret(monitorInput.getSecret());
+				 
+				final boolean result = new BMBTApiIntegrationTest().runTest(monitorInput.getContextRoot(), 
+						getDataSource(monitorInput, context), util, context.getLogger(), monitorInput.getAppUserName(), 
+						monitorInput.getAppPassword());
+				
+				if (result) 
+					return PASSED;			
+			} catch (final Exception e) {
+				context.getLogger().log("An exception occurred whilst attempting to convert Json to Object." 
+						+ monitorInput + ":" + e.getMessage());
+			}
 		}
-
-		return "Failed";
+		
+		return sendFailMessage();
 	}
 
+	/**
+	 * Send fail message over SNS.
+	 */
+	private String sendFailMessage() {
+		//create a new SNS client and set endpoint
+		AmazonSNS snsClient = AmazonSNSClient.builder().withRegion(Regions.US_EAST_1).build();			
+		snsClient.publish("arn:aws:sns:us-east-1:981596309454:BMBTMonitorState", "BMBT Monitor failed.");
+		
+		return FAILED;
+	}
+	
 	/**
 	 * Database {@link DataSource} bean configuration.
 	 * 

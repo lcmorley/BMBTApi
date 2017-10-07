@@ -14,9 +14,7 @@ public interface DeviceInsert {
 	 * Device inserted into the DB.
 	 * 
 	 * @param deviceId - the device to insert.
-	 * 
-	 * @return - the number of rows affected.
 	 */
-	int insertDevice(String deviceId) throws ApiException ;
+	void insertDevice(String deviceId) throws ApiException ;
 	
 }
