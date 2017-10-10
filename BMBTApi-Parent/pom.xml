@@ -14,6 +14,7 @@
 	<modules>
 		<module>BMBTApi-Common</module>
 		<module>BMBTApi-IntegrationTest</module>
+		<module>BMBTApi_UserService</module>
 		<module>BMBTApi-boot</module>
 		<module>BMBT_Monitor_Lambda</module>
 	</modules>
