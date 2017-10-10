@@ -9,9 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractQuery;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.TestResult;
+import uk.co.olimor.BMBTApi_boot.dao.ResultHistoryQuery;
 
 /**
  * Class which performs the query to get all test results for a given user.

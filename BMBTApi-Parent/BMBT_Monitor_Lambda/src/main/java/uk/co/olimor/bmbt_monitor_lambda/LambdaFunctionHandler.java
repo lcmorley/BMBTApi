@@ -39,11 +39,9 @@ public class LambdaFunctionHandler implements RequestHandler<MonitorInput, Strin
 				final JWTUtil util = new JWTUtil();
 				util.setSecret(monitorInput.getSecret());
 				 
-				final boolean result = new BMBTApiIntegrationTest().runTest(monitorInput.getContextRoot(), 
-						getDataSource(monitorInput, context), util, context.getLogger(), monitorInput.getAppUserName(), 
-						monitorInput.getAppPassword());
-				
-				if (result) 
+				if (new BMBTApiIntegrationTest().runTest(monitorInput.getContextRoot(), 
+						getDataSource(monitorInput, context), util, context.getLogger(), 
+						monitorInput.getAppUserName(), monitorInput.getAppPassword()));
 					return PASSED;			
 			} catch (final Exception e) {
 				context.getLogger().log("An exception occurred whilst running the integration test." 

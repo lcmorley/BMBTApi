@@ -7,9 +7,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractUpdate;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.TestResult;
+import uk.co.olimor.BMBTApi_boot.dao.TestResultInsert;
 
 /**
  * Persist the test result to the database.

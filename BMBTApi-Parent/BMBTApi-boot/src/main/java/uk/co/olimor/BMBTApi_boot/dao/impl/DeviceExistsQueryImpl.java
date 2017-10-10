@@ -8,8 +8,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.DeviceExistsQuery;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractQuery;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
+import uk.co.olimor.BMBTApi_boot.dao.DeviceExistsQuery;
 
 /**
  * Class which implements the {@link DeviceExistsQuery} interface to ascertain

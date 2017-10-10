@@ -3,8 +3,9 @@ package uk.co.olimor.BMBTApi_boot.dao.impl;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.DeviceDelete;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractUpdate;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
+import uk.co.olimor.BMBTApi_boot.dao.DeviceDelete;
 
 /**
  * Service to remove a device and users and testresults from the db.

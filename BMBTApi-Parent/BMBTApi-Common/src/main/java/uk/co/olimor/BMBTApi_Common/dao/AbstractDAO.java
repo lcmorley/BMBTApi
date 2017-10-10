@@ -1,4 +1,4 @@
-package uk.co.olimor.BMBTApi_boot.dao;
+package uk.co.olimor.BMBTApi_Common.dao;
 
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;

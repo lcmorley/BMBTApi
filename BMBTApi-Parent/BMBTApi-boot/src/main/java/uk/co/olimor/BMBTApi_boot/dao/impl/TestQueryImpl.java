@@ -9,10 +9,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
-import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractQuery;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.Question;
 import uk.co.olimor.BMBTApi_Common.model.Test;
+import uk.co.olimor.BMBTApi_boot.dao.TestQuery;
 
 /**
  * Implementation of {@link TestQuery}.

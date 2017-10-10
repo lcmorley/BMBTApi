@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_Common.common.Constants;
-import uk.co.olimor.BMBTApi_boot.dao.DeviceSecurityInsert;
+import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractUpdate;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
+import uk.co.olimor.BMBTApi_boot.dao.DeviceSecurityInsert;
 
 @Service
 @Log4j2

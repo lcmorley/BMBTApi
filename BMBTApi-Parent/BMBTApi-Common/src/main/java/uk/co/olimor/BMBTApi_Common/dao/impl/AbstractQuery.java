@@ -1,4 +1,4 @@
-package uk.co.olimor.BMBTApi_boot.dao.impl;
+package uk.co.olimor.BMBTApi_Common.dao.impl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import lombok.extern.log4j.Log4j2;
+import uk.co.olimor.BMBTApi_Common.dao.AbstractDAO;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
-import uk.co.olimor.BMBTApi_boot.dao.AbstractDAO;
 
 /**
  * Abstract class containing common functionality.
