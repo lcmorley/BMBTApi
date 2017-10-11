@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.user_service;
+package uk.co.olimor.lambda.user_service;
 
 import java.io.IOException;
 import java.io.InputStream;

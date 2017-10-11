@@ -40,7 +40,7 @@ public class LambdaFunctionHandler implements RequestHandler<MonitorInput, Strin
 				util.setSecret(monitorInput.getSecret());
 				 
 				if (new BMBTApiIntegrationTest().runTest(monitorInput.getContextRoot(), 
-						getDataSource(monitorInput, context), util, context.getLogger(), 
+						getDataSource(monitorInput), util, context.getLogger(), 
 						monitorInput.getAppUserName(), monitorInput.getAppPassword()));
 					return PASSED;			
 			} catch (final Exception e) {
@@ -66,9 +66,11 @@ public class LambdaFunctionHandler implements RequestHandler<MonitorInput, Strin
 	/**
 	 * Database {@link DataSource} bean configuration.
 	 * 
+	 * @param input - the input to run the test.
+	 * 
 	 * @return the datasource.
 	 */
-	public DataSource getDataSource(final MonitorInput input, final Context context) {
+	public DataSource getDataSource(final MonitorInput input) {
 		final MysqlDataSource dataSource = new MysqlDataSource();
 
 		dataSource.setUser(input.getDbUserName());

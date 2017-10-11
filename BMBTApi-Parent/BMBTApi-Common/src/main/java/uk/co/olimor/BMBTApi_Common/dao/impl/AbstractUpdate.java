@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_Common.common.Constants;
 import uk.co.olimor.BMBTApi_Common.dao.AbstractDAO;
@@ -21,13 +20,9 @@ import uk.co.olimor.BMBTApi_Common.exception.ApiException;
  *
  */
 @Log4j2
+@Data
+@EqualsAndHashCode(callSuper=true)
 public abstract class AbstractUpdate<T> extends AbstractDAO {
-
-	/**
-	 * Datasource object.
-	 */
-	@Autowired
-	protected DataSource datasource;
 
 	/**
 	 * 

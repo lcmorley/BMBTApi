@@ -1,36 +1,54 @@
-package com.amazonaws.lambda.user_service.dao.impl;
+package uk.co.olimor.lambda.user_service.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import com.amazonaws.lambda.user_service.dao.UsersByDeviceIdQuery;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractQuery;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.User;
+import uk.co.olimor.lambda.user_service.dao.UserQuery;
 
-@Log4j2
+/**
+ * Service which implements performs Database CRUD operation.
+ * 
+ * @author leonmorley
+ *
+ */
 @Service
-public class UsersByDeviceIdQueryimpl extends AbstractQuery<User> implements UsersByDeviceIdQuery {
+@Log4j2
+public class UserQueryImpl extends AbstractQuery<User> implements UserQuery {
 
-	@Override
-	public List<User> getUsersByDeviceId(String deviceId) throws ApiException {
-		log.traceEntry();
-		
-		final List<User> users = query("SELECT * FROM users where deviceId = '" + deviceId + "'");	
-		
-		if (users.size() == 0) 
-			logError(log, "Unable to find users with deviceId: " + deviceId, HttpStatus.NOT_FOUND);
-		
-		return log.traceExit(users);
+	/**
+	 * Construct and set the datasource.
+	 * 
+	 * @param datasource - the datasource.
+	 */
+	public UserQueryImpl(final DataSource datasource) {
+		this.datasource = datasource;
 	}
 	
+	/**
+	 * Get users.
+	 */
+	public User getUser(final String userId) throws ApiException {
+		log.traceEntry();
+		
+		final List<User> users = query("SELECT * FROM users where id = '" + userId + "'");	
+		
+		if (users.size() == 0) 
+			logError(log, "Unable to find user with id: " + userId, HttpStatus.NOT_FOUND);
+		
+		return log.traceExit(users.get(0));
+	}
+
 	@Override
 	protected List<User> buildResult(final ResultSet result) throws SQLException {
 		log.entry(result);

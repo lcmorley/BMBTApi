@@ -1,15 +1,16 @@
-package com.amazonaws.lambda.user_service.dao.impl;
+package uk.co.olimor.lambda.user_service.dao.impl;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
+import javax.sql.DataSource;
 
-import com.amazonaws.lambda.user_service.dao.NewUserInsert;
+import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j2;
 import uk.co.olimor.BMBTApi_Common.dao.impl.AbstractUpdate;
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.User;
+import uk.co.olimor.lambda.user_service.dao.NewUserInsert;
 
 @Log4j2
 @Service
@@ -20,6 +21,15 @@ public class NewUserInsertImpl extends AbstractUpdate<User> implements NewUserIn
 	 */
 	private static final String INSERT_STATEMENT = "INSERT INTO users VALUES ('%s', '%s', '%s')";
 
+	/**
+	 * Construct using the incoming datasource.
+	 * 
+	 * @param datasource
+	 */
+	public NewUserInsertImpl(final DataSource datasource) {
+		this.datasource = datasource;
+	}
+	
 	@Override
 	public String insertUser(final String userName, final String deviceId) throws ApiException {
 		log.entry(userName);

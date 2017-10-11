@@ -1,5 +1,7 @@
 package uk.co.olimor.BMBTApi_Common.dao;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 
@@ -12,6 +14,11 @@ import uk.co.olimor.BMBTApi_Common.exception.ApiException;
  *
  */
 public abstract class AbstractDAO {
+
+	/**
+	 * Datasource object.
+	 */
+	protected DataSource datasource;
 
 	/**
 	 * Log and throw error.

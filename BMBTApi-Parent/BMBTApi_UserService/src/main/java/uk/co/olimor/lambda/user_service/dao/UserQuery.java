@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.user_service.dao;
+package uk.co.olimor.lambda.user_service.dao;
 
 import uk.co.olimor.BMBTApi_Common.exception.ApiException;
 import uk.co.olimor.BMBTApi_Common.model.User;
