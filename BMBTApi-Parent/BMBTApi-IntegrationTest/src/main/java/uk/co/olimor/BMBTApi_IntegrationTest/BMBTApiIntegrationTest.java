@@ -8,7 +8,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -96,11 +95,10 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		headers.set("content-type", "application/json");
 		headers.set(Constants.NEW_DEVICE_HEADER, Base64.getEncoder().encodeToString("NEW_DEVICE".getBytes()));
 
-		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
+		final HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate
-					.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.FORBIDDEN.value(), e.getRawStatusCode(), "registerDevice");
 		}
@@ -122,8 +120,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate
-					.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.FORBIDDEN.value(), e.getRawStatusCode(), "registerDevice");
 		}
@@ -144,8 +141,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate
-					.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/registerDevice"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.FORBIDDEN.value(), e.getRawStatusCode(), "registerDevice");
 		}
@@ -170,8 +166,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/login"), entity,
-					ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/login"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.UNAUTHORIZED.value(), e.getRawStatusCode(), "login");
 		}
@@ -198,8 +193,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<LoginCredentials> entity = new HttpEntity<LoginCredentials>(login, headers);
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/login"), entity,
-					ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/login"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.UNAUTHORIZED.value(), e.getRawStatusCode(), "login");
 		}
@@ -222,8 +216,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/createUser"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "createUser");
 		}
@@ -247,8 +240,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/createUser"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.NOT_FOUND.value(), e.getRawStatusCode(), "createUser");
 		}
@@ -271,8 +263,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/createUser"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "createUser");
 		}
@@ -293,11 +284,10 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		user.setDeviceId("INVALID");
 		user.setUserName("");
 
-		HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
+		final HttpEntity<CreateUserRequest> entity = new HttpEntity<CreateUserRequest>(user, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/createUser"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/createUser"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "createUser");
 		}
@@ -314,11 +304,10 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		login();
 		createUser();
 
-		HttpEntity entity = new HttpEntity(buildHeaders());
+		final HttpEntity<String> entity = new HttpEntity<>(buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.exchange(createURLWithPort("/user/unknown"),
-					HttpMethod.GET, entity, ApiResponse.class);
+			restTemplate.exchange(createURLWithPort("/user/unknown"), HttpMethod.GET, entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.NOT_FOUND.value(), e.getRawStatusCode(), "user");
 		}
@@ -334,11 +323,11 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		login();
 		createUser();
 
-		HttpEntity entity = new HttpEntity(buildHeaders());
+		final HttpEntity<String> entity = new HttpEntity<>(buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate
-					.exchange(createURLWithPort("/usersByDeviceId/unknown"), HttpMethod.GET, entity, ApiResponse.class);
+			restTemplate.exchange(createURLWithPort("/usersByDeviceId/unknown"), HttpMethod.GET, entity, 
+					ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.NOT_FOUND.value(), e.getRawStatusCode(), "usersByDeviceId");
 		}
@@ -355,11 +344,10 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 
 		final TestResult result = new TestResult("unknown", 1, 5, 2, 10.5f, "Full");
 
-		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+		final HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/submitResult"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.NOT_FOUND.value(), e.getRawStatusCode(), "submitResult");
 		}
@@ -378,11 +366,10 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 
 		final TestResult result = new TestResult(null, 1, 5, 2, 10.5f, "Full");
 
-		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
+		final HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/submitResult"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "submitResult");
 		}
@@ -404,8 +391,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/submitResult"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "submitResult");
 		}
@@ -427,8 +413,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/submitResult"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.NOT_FOUND.value(), e.getRawStatusCode(), "submitResult");
 		}
@@ -450,8 +435,7 @@ public class BMBTApiIntegrationTest extends AbstractIntegrationTest {
 		HttpEntity<TestResult> entity = new HttpEntity<TestResult>(result, buildHeaders());
 
 		try {
-			final ResponseEntity<ApiResponse> response = restTemplate.postForEntity(createURLWithPort("/submitResult"),
-					entity, ApiResponse.class);
+			restTemplate.postForEntity(createURLWithPort("/submitResult"), entity, ApiResponse.class);
 		} catch (final HttpClientErrorException e) {
 			assertValue(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode(), "submitResult");
 		}
