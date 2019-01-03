@@ -1,6 +1,7 @@
 package uk.co.olimor.BMBTApi_Common.response;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Api Response object.
@@ -9,6 +10,7 @@ import lombok.Data;
  *
  */
 @Data
+@NoArgsConstructor
 public class ApiResponse {
 
 	/**
@@ -54,10 +56,5 @@ public class ApiResponse {
 	public ApiResponse(final String confirmation) {
 		this.confirmationMessage = confirmation;
 	}
-	
-	/**
-	 * Default Constructor.
-	 */
-	public ApiResponse() {}
 	
 }
